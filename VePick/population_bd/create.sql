@@ -182,7 +182,7 @@ create table TacheRoutine (
 	constraint routine_pk primary key (numVehicule, numTache),
 	constraint routine_fk1 foreign key (numVehicule) references VehiculeRegulation(numVehicule),
 	constraint routine_fk2 foreign key (numTache) references Tache(numTache),
-	constraint routine_etat check (etat = 'En attente' OR etat = 'Termine')
+	constraint routine_etat check (etat = 'En attente' OR etat = 'Termine' OR etat = 'Echec')
 );
 
 create table Amende(

@@ -1,3 +1,4 @@
+DELETE FROM JourReserve;
 DELETE FROM Reservation;
 DELETE FROM Amende;
 DELETE FROM TacheRoutine;
