@@ -90,3 +90,5 @@ INSERT INTO TacheRoutine values (2, 1, 1, 'En attente');
 INSERT INTO Amende values (1,3.2,1,1,TO_DATE('2015/01/16 14:34:11', 'yyyy/mm/dd hh24:mi:ss'));
 
 INSERT INTO Reservation values (1,2,TO_DATE('2015/01/09 22:00:00', 'yyyy/mm/dd hh24:mi:ss'),'jour','Termine');
+
+INSERT INTO JourReserve values (1,2,TO_DATE('2015/01/09 22:00:00', 'yyyy/mm/dd hh24:mi:ss'), TO_DATE('2015/01/29 12:00:00', 'yyyy/mm/dd hh24:mi:ss'));
