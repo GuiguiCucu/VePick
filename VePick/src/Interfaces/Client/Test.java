@@ -20,7 +20,6 @@ public class Test {
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(dateAbonnement);
 		calendar.add(Calendar.YEAR, 1);
-		;
 		Date dateFinAbo = new Date(calendar.getTimeInMillis());
 		System.out.println(sdf.format(dateFinAbo));
 
