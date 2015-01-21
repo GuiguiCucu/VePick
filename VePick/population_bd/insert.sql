@@ -42,7 +42,7 @@ INSERT INTO Bornette values (7, 'OK', 4);
 INSERT INTO Bornette values (8, 'OK', 4);
 
 INSERT INTO Velo values (1, 'VTC', TO_DATE('2015/01/01 16:00:00', 'yyyy/mm/dd hh24:mi:ss'), 'OK', 1);
-INSERT INTO Velo values (2, 'VTC', TO_DATE('2015/01/01 16:00:00', 'yyyy/mm/dd hh24:mi:ss'), 'OK', 1);
+INSERT INTO Velo values (2, 'VTC', TO_DATE('2015/01/01 16:00:00', 'yyyy/mm/dd hh24:mi:ss'), 'HS', 1);
 INSERT INTO Velo values (3, 'VTC', TO_DATE('2015/01/01 16:00:00', 'yyyy/mm/dd hh24:mi:ss'), 'OK', 2);
 INSERT INTO Velo values (4, 'VTC', TO_DATE('2015/01/01 16:00:00', 'yyyy/mm/dd hh24:mi:ss'), 'OK', 2);
 INSERT INTO Velo values (5, 'VTC', TO_DATE('2015/01/01 16:00:00', 'yyyy/mm/dd hh24:mi:ss'), 'OK', 3);
