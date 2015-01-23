@@ -7,10 +7,10 @@ drop table ActionVehiculeBornette;
 drop table ActionVehiculeVelo;
 drop table ActionVehicule;
 drop table Location;
-drop table Abonne;
-drop table NonAbonne;
 drop table RemiseAbonne;
 drop table RemiseNonAbonne;
+drop table Abonne;
+drop table NonAbonne;
 drop table Client;
 drop table VehiculeRegulation;
 drop table Bornette;
@@ -83,27 +83,11 @@ create table Client (
 	constraint client_pk primary key (numClient)
 );
 
-create table RemiseNonAbonne (
-	numRemise int NOT NULL,
-	codeRemise varchar(7) NOT NULL,
-	pourCentRemise int NOT NULL,
-	datePeremption date NOT NULL,
-	constraint remise_non_abo_pk primary key (numRemise)
-);
-
-create table RemiseAbonne (
-	numRemise int NOT NULL,
-	pourCentRemise int NOT NULL,
-	constraint remise_abo_pk primary key (numRemise)
-);
-
 create table NonAbonne (
 	numClient int NOT NULL,
 	dateEnregistrement date,
-	numRemise int,
 	constraint non_abonne_pk primary key (numClient),
-	constraint non_abonne_fk1 foreign key (numClient) references Client(numClient),
-	constraint non_abonne_fk2 foreign key (numRemise) references RemiseNonAbonne(numRemise)
+	constraint non_abonne_fk1 foreign key (numClient) references Client(numClient)
 );
 
 create table Abonne (
@@ -116,11 +100,27 @@ create table Abonne (
 	adresse varchar(45) NOT NULL,
 	cp int NOT NULL,
 	dateAbonnement date NOT NULL,
-	numRemise int,
 	constraint abonne_pk primary key (numClient),
 	constraint abonne_sexe check (sexe = 'Homme' OR sexe = 'Femme'),
-	constraint abonne_fk1 foreign key (numClient) references Client(numClient),
-	constraint abonne_fk2 foreign key (numRemise) references RemiseNonAbonne(numRemise)
+	constraint abonne_fk1 foreign key (numClient) references Client(numClient)
+);
+
+create table RemiseNonAbonne (
+	numRemise int NOT NULL,
+	codeRemise varchar(7) NOT NULL,
+	pourCentRemise int NOT NULL,
+	datePeremption date NOT NULL,
+	numClient int NOT NULL,
+	constraint remise_non_abo_pk primary key (numRemise),
+	constraint remise_non_abonne_fk1 foreign key (numClient) references NonAbonne(numClient)
+);
+
+create table RemiseAbonne (
+	numRemise int NOT NULL,
+	pourCentRemise int NOT NULL,
+	numClient int NOT NULL,
+	constraint remise_abo_pk primary key (numRemise),
+	constraint remise_abonne_fk1 foreign key (numClient) references Abonne(numClient)
 );
 
 create table Location (
