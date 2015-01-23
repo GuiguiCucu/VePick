@@ -2,16 +2,16 @@ CREATE OR REPLACE TRIGGER LOCATION_UNIQUE
   BEFORE INSERT ON Location
   FOR EACH ROW
 DECLARE
-  loc varchar(15);
+  loc int;
 BEGIN
-  SELECT numVelo INTO loc
+  SELECT numClient INTO loc
   FROM Location
   WHERE numClient =:new.numClient
   AND dateFinLocation IS NULL;
     
-  if (loc != null)
-  then raise_application_error(-20000 , 'Impossible de louer deux vélos en même temps!');
-  end if;
+  IF loc IS NOT NULL
+  THEN raise_application_error(-20000 , 'Impossible de louer deux vélos en même temps!');
+  END IF;
 END;
 /
 
