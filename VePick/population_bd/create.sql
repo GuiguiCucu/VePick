@@ -13,8 +13,8 @@ drop table RemiseAbonne;
 drop table RemiseNonAbonne;
 drop table Client;
 drop table VehiculeRegulation;
-drop table Velo;
 drop table Bornette;
+drop table Velo;
 drop table PlageHoraire;
 drop table Station;
 drop table TypeStation;
@@ -48,24 +48,24 @@ create table PlageHoraire (
 	constraint plage_horaire_fk2 foreign key (idType) references TypeStation(idType)
 );
 
-create table Bornette (
-	numBornette int NOT NULL,
-	etat varchar(2) NOT NULL,
-	numStation int NOT NULL,
-	constraint bornette_pk primary key (numBornette),
-	constraint bornette_fk foreign key (numStation) references Station(numStation),
-	constraint bornette_etat check (etat = 'OK' OR etat = 'HS')
-);
-
 create table Velo (
 	numVelo int NOT NULL,
 	modele varchar(45),
 	dateMiseEnService date NOT NULL,
 	etat varchar(2) NOT NULL,
-	numBornette int,
 	constraint velo_pk primary key (numVelo),
-	constraint velo_fk1 foreign key (numBornette) references Bornette(numBornette),
 	constraint velo_etat check (etat = 'OK' OR etat = 'HS')
+);
+
+create table Bornette (
+	numBornette int NOT NULL,
+	etat varchar(2) NOT NULL,
+	numStation int NOT NULL,
+	numVelo int,
+	constraint bornette_pk primary key (numBornette),
+	constraint bornette_fk1 foreign key (numStation) references Station(numStation),
+	constraint bornette_fk2 foreign key (numVelo) references Velo(numVelo),
+	constraint bornette_etat check (etat = 'OK' OR etat = 'HS')
 );
 
 create table VehiculeRegulation (
