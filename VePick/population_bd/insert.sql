@@ -57,6 +57,8 @@ INSERT INTO Bornette values (5, 'OK', 3, 5);
 INSERT INTO Bornette values (6, 'OK', 3, 6);
 INSERT INTO Bornette values (7, 'OK', 4, 7);
 INSERT INTO Bornette values (8, 'OK', 4, 8);
+INSERT INTO Bornette values (9, 'OK', 4, NULL);
+INSERT INTO Bornette values (10, 'HS', 4, NULL);
 
 INSERT INTO VehiculeRegulation values (1, 'Traffic', TO_DATE('2015/01/01 16:00:00', 'yyyy/mm/dd hh24:mi:ss'), 10);
 INSERT INTO VehiculeRegulation values (2, 'Transporteur T4', TO_DATE('2015/01/01 16:00:00', 'yyyy/mm/dd hh24:mi:ss'), 10);
