@@ -1,9 +1,13 @@
 package Interfaces.Client;
 
 import java.sql.Date;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Scanner;
+
+import Connexion.Connexion;
+import Requetes.Station;
 
 public class MenuClient {
 
@@ -16,14 +20,14 @@ public class MenuClient {
 	}
 
 	public void afficherMenu() {
-		System.out.println("--------------------------------");
+		System.out.println("\n--------------------------------");
 		System.out.println("-----------Menu Client----------");
 		System.out.println("--------------------------------\n\r");
 		System.out.println("Choisissez une action : ");
 		System.out.println("1 - S'abonner");
 		System.out.println("2 - Consulter les bornes V-, V+");
-		System.out.println("3 - Emprunter un vélo");
-		System.out.println("4 - Emprunter un vélo");
+		System.out.println("3 - Emprunter un velo");
+		System.out.println("4 - Emprunter un velo");
 		System.out.println("5 - Quitter");
 	}
 
@@ -34,21 +38,40 @@ public class MenuClient {
 		case 1:
 			actionAbonnement();
 			break;
-			
-
+		case 2:
+			consultationStations();
+			break;
+		case 5:
+			Connexion.close();
+			System.out.println("Au revoir");
+			System.exit(0);
+			break;
 		default:
 			break;
 		}
+
+	}
+
+	private void consultationStations() {
+		System.out.println("\n--------------------------------");
+		System.out.println("-Client - Consultation stations-");
+		System.out.println("--------------------------------");
+		try {
+			Station.afficherStations(Connexion.getConnexion());
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}	
+		
 	}
 
 	private void actionAbonnement() {
 		Scanner sc = new Scanner(System.in);
-		System.out.println("--------------------------------");
+		System.out.println("\n--------------------------------");
 		System.out.println("-------Client - Abonnement------");
 		System.out.println("--------------------------------");
 		System.out.println("Veuillez saisir votre nom :");
 		String nom = sc.nextLine();
-		System.out.println("Veuillez saisir votre prénom :");
+		System.out.println("Veuillez saisir votre prenom :");
 		String prenom = sc.nextLine();
 		String strdate = "";
 		do {
@@ -80,7 +103,7 @@ public class MenuClient {
 		Date dateFinAbo = new Date(calendar.getTimeInMillis());
 		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 		System.out
-				.println("Votre abonnement a été pris en compte. Date d'expitayion : "
+				.println("Votre abonnement a ete pris en compte. Date d'expitayion : "
 						+ sdf.format(dateFinAbo));
 	}
 }
