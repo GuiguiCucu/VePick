@@ -4,11 +4,11 @@ CREATE OR REPLACE TRIGGER REMISE_UNIQUE_ABONNE
 DECLARE
   remise int;
 BEGIN
-  SELECT numRemise INTO remise
+  SELECT COUNT(numRemise) INTO remise
   FROM Abonne
   WHERE numRemise =:new.numRemise;
     
-  IF remise IS NOT NULL
+  IF (remise <> 0)
   THEN raise_application_error(-20000 , 'Vous avez deja une remise');
   END IF;
 END;
