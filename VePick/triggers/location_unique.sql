@@ -4,14 +4,15 @@ CREATE OR REPLACE TRIGGER LOCATION_UNIQUE
 DECLARE
   loc int;
 BEGIN
-  SELECT numClient INTO loc
+  SELECT COUNT(numClient) INTO loc
   FROM Location
   WHERE numClient =:new.numClient
   AND dateFinLocation IS NULL;
     
-  IF loc IS NOT NULL
+  IF (loc <> 0)
   THEN raise_application_error(-20000 , 'Impossible de louer deux vélos en même temps!');
   END IF;
+  
 END;
 /
 
