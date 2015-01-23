@@ -24,12 +24,12 @@ BEGIN
   THEN raise_application_error(-20000 , 'Impossible d accorcher un vélo à une bornette s il se trouve dans un vehicule, il doit d abord etre deposé.');
   END IF;
   
-  SELECT numClient INTO estLoue
+  SELECT COUNT(numClient) INTO estLoue
   FROM Location
   WHERE dateFinLocation IS NULL
   AND numVelo = :new.numVelo;
   
-  IF(numClient IS NOT NULL)
+  IF(numClient <> 0)
   THEN 
   UPDATE Location SET dateFinLocation = NOW()
   END IF;
@@ -42,8 +42,8 @@ END;
 ===== TESTS =====
 
 -- On sait que vélo X est en location par un Client Y, on tente de l'acrocher à une bornette, verifier que la dateFinLocation est bien remplie
-
+--TODO
 
 --On sait que le Vélo X est dans le vehicule Y, on tente de l'accrocher à une bornette
-
+--TODO
 */
