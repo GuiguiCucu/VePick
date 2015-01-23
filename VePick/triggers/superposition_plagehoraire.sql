@@ -2,14 +2,16 @@ CREATE OR REPLACE TRIGGER SUPERPOSITION_PLAGE_HORAIRE
   BEFORE INSERT OR UPDATE ON PlageHoraire
   FOR EACH ROW
 DECLARE
-  dateDeb varchar2(45);
+  dateDeb DATE;
+  dateF   DATE;
 BEGIN
-  SELECT dateDebut INTO dateDeb
+  SELECT dateDebut, dateFin INTO dateDeb, dateF
   FROM PlageHoraire
   WHERE numStation =:new.numStation;
-  
-  IF TO_DATE(dateDeb, 'yyyy/mm/dd hh24:mi:ss') > :new.dateDebut OR TO_DATE(dateF, 'yyyy/mm/dd hh24:mi:ss') < :new.dateFin
-  	THEN raise_application_error(-20000 , 'Une plage horaire equivalente existe deja');
+
+    
+  IF dateDeb > :new.dateDebut OR dateF < :new.dateFin
+  THEN raise_application_error(-20000 , 'Une plage horaire equivalente existe deja');
   END IF;
 END;
 /
