@@ -27,7 +27,7 @@ public class MenuClient {
 		System.out.println("1 - S'abonner");
 		System.out.println("2 - Consulter les bornes V-, V+");
 		System.out.println("3 - Emprunter un velo");
-		System.out.println("4 - Emprunter un velo");
+		System.out.println("4 - Rendre un velo");
 		System.out.println("5 - Quitter");
 	}
 
@@ -41,6 +41,12 @@ public class MenuClient {
 		case 2:
 			consultationStations();
 			break;
+		case 3:
+			emprunterVelo();
+			break;
+		case 4 :
+			rendreVelo();
+			break;
 		case 5:
 			Connexion.close();
 			System.out.println("Au revoir");
@@ -50,6 +56,23 @@ public class MenuClient {
 			break;
 		}
 
+	}
+
+	private void rendreVelo() {
+		System.out.println("\n--------------------------------");
+		System.out.println("---Client - Rendre vélo---");
+		System.out.println("--------------------------------");	
+		System.out.println("TODO");
+		/*Afficher borne libre station
+		 * Saisir code client
+		 * Yolo*/
+	}
+
+	private void emprunterVelo() {
+		System.out.println("\n--------------------------------");
+		System.out.println("---Client - Emprunter vélo---");
+		System.out.println("--------------------------------");	
+		System.out.println("TODO");
 	}
 
 	private void consultationStations() {
@@ -103,7 +126,7 @@ public class MenuClient {
 		Date dateFinAbo = new Date(calendar.getTimeInMillis());
 		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 		System.out
-				.println("Votre abonnement a ete pris en compte. Date d'expitayion : "
+				.println("Votre abonnement a ete pris en compte. Date d'expiration : "
 						+ sdf.format(dateFinAbo));
 	}
 }
