@@ -27,7 +27,7 @@ public class MenuSuperviseur {
 		System.out.println("1 - Consulter une routine");
 		System.out.println("2 - Modifier une routine");
 		System.out.println("3 - Consulter une station");
-		System.out.println("4 - Consulter les bornes V-, V+");
+		System.out.println("4 - Consulter les stations V-, V+");
 		System.out.println("5 - Modifier les plages horaires V-, V+");
 		System.out.println("6 - Quitter");
 	}
@@ -40,16 +40,16 @@ public class MenuSuperviseur {
 			consulterRoutine();
 			break;
 		case 2:
-			System.out.println("souce");
+			System.out.println("TODO modif routine");
 			break;
 		case 3:
 			consulterStation();
 			break;
 		case 4:
-			System.out.println("suus");
+			consulterTypeStation();
 			break;
 		case 5:
-			System.out.println("moi mon nez");
+			System.out.println("TODO modif PH");
 			break;
 		case 6:
 			Connexion.close();
@@ -90,6 +90,9 @@ public class MenuSuperviseur {
 		}
 	}
 
+	/**
+	 * affichage des velos d'une station
+	 */
 	private void consulterStation() {
 		System.out.println("\n--------------------------------");
 		System.out.println("-Superviseur - Consulter station");
@@ -109,9 +112,27 @@ public class MenuSuperviseur {
 		int choix = sc.nextInt();
 
 		try {
-			System.out.println("Tous les velos de la station "+choix+" :\n");
+			System.out
+					.println("Tous les velos de la station " + choix + " :\n");
 			Velo.afficherVeloStation(Connexion.getConnexion(), choix);
 			Velo.afficherNombreVelosStation(Connexion.getConnexion(), choix);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * affichage du statut d'une station
+	 */
+	private void consulterTypeStation() {
+		System.out.println("\n--------------------------------");
+		System.out.println("Superviseur - Type station");
+		System.out.println("--------------------------------");
+
+		// affichage de toutes les stations
+		System.out.println("\nToutes les stations :");
+		try {
+			Station.afficherStations(Connexion.getConnexion());
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
