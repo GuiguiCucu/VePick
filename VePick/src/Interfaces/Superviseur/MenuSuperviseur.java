@@ -10,6 +10,7 @@ import java.util.Scanner;
 import Connexion.Connexion;
 import Interfaces.Client.MenuClient;
 import Requetes.Station;
+import Requetes.TacheRoutine;
 import Requetes.VehiculeRegulation;
 
 public class MenuSuperviseur {
@@ -73,14 +74,25 @@ public class MenuSuperviseur {
 		System.out.println("Superviseur - Consulter routine");
 		System.out.println("--------------------------------");
 		
+		// affichage de tous les vehicules
 		System.out.println("\nTous les vehicules de régulation :");	
 		try {
 			VehiculeRegulation.afficherVehicules(Connexion.getConnexion());
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		
+		// affichage de la routine
 		System.out.println("\nSaisissez un numero de Vehicule :");
-		// TODO : affichage de la routine de ce vehicule
+		Scanner sc = new Scanner(System.in);
+		int choix = sc.nextInt();
+		
+		try{
+			TacheRoutine.afficherRoutine(Connexion.getConnexion(), choix);
+		}
+		catch(SQLException e){
+			e.printStackTrace();
+		}
 	}
 
 }
