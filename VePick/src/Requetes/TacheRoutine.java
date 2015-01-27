@@ -14,7 +14,7 @@ public class TacheRoutine {
 	 * @throws SQLException 
 	 */
 	public static void afficherRoutine(Connection conn, int numVehicule) throws SQLException{
-		PreparedStatement stRoutine = conn.prepareStatement("SELECT rang, numTache FROM TacheRoutine WHERE numVehicule = ? ORDER BY rang");
+		PreparedStatement stRoutine = conn.prepareStatement("SELECT rang, numTache, etat FROM TacheRoutine WHERE numVehicule = ? ORDER BY rang");
 		stRoutine.setInt(1, numVehicule);
 		ResultSet rsRoutine = stRoutine.executeQuery();
 		while(rsRoutine.next()){
@@ -23,8 +23,9 @@ public class TacheRoutine {
 			ResultSet rsTache = stTache.executeQuery();
 			
 			if(rsTache.next()){
-				System.out.println("\nTache :"+rsTache.getString("nomTache"));
-				System.out.println("rang "+rsRoutine.getInt("rang"));
+				System.out.println("\nTache : "+rsTache.getString("nomTache"));
+				System.out.println("Rang "+rsRoutine.getInt("rang"));
+				System.out.println("Etat : "+rsRoutine.getString("etat"));
 			}
 		}
 		System.out.println("\n-----------------------------------");

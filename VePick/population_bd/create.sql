@@ -179,7 +179,7 @@ create table TacheRoutine (
 	numTache int NOT NULL,
 	rang int NOT NULL,
 	etat varchar(25) NOT NULL,
-	constraint routine_pk primary key (numVehicule, numTache),
+	constraint routine_pk primary key (numVehicule, numTache, rang),
 	constraint routine_fk1 foreign key (numVehicule) references VehiculeRegulation(numVehicule),
 	constraint routine_fk2 foreign key (numTache) references Tache(numTache),
 	constraint routine_etat check (etat = 'En attente' OR etat = 'Termine' OR etat = 'Echec')

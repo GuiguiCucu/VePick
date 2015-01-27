@@ -16,5 +16,4 @@ END;
 
 /*Lorsqu'on conssome une remise, on passe la reference numremise de client a null et on supprime le tuple remise correspondant */
 /*On considere que l'abonne 2 a deja la remiseAbo 1
-INSERT INTO RemiseAbonne values (2,10, 2);
-*/
+--INSERT INTO RemiseAbonne values (2,10, 2);
