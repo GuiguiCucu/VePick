@@ -6,8 +6,6 @@ DECLARE
   dateDernierDepot date;
   surBornetter int;
 BEGIN
-
-  
   
   SELECT COUNT(numVelo) INTO surBornette
   FROM Bornette
