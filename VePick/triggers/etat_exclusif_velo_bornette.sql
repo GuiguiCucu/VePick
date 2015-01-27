@@ -31,7 +31,7 @@ BEGIN
   
   IF(estLoue <> 0)
   THEN 
-  UPDATE Location SET dateFinLocation = NOW()
+  UPDATE Location SET dateFinLocation = NOW() WHERE dateFinLocation IS NULL AND numVelo = :new.numVelo;
   END IF;
   
  
@@ -42,8 +42,8 @@ END;
 ===== TESTS =====
 
 -- On sait que vélo X est en location par un Client Y, on tente de l'acrocher à une bornette, verifier que la dateFinLocation est bien remplie
---TODO
+UPDATE Bornette SET numVelo = 4 WHERE numBornette = 4;
 
 --On sait que le Vélo X est dans le vehicule Y, on tente de l'accrocher à une bornette
---TODO
+UPDATE Bornette SET numVelo = 5 WHERE numBornette = 5;
 */
