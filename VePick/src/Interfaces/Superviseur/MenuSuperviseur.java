@@ -1,5 +1,6 @@
 package Interfaces.Superviseur;
 
+import java.sql.Connection;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
@@ -9,6 +10,7 @@ import java.util.Scanner;
 import Connexion.Connexion;
 import Interfaces.Client.MenuClient;
 import Requetes.Station;
+import Requetes.VehiculeRegulation;
 
 public class MenuSuperviseur {
 	
@@ -38,7 +40,7 @@ public class MenuSuperviseur {
 		int choix = sc.nextInt();
 		switch (choix) {
 		case 1:
-			System.out.println("jeej");
+			consulterRoutine();
 			break;
 		case 2:
 			System.out.println("souce");
@@ -61,6 +63,24 @@ public class MenuSuperviseur {
 			break;
 		}
 
+	}
+	
+	/**
+	 * consultation d'une routine en indiquant le numVehicule
+	 */
+	private void consulterRoutine(){
+		System.out.println("\n--------------------------------");
+		System.out.println("Superviseur - Consulter routine");
+		System.out.println("--------------------------------");
+		
+		System.out.println("\nTous les vehicules de régulation :");	
+		try {
+			VehiculeRegulation.afficherVehicules(Connexion.getConnexion());
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		System.out.println("\nSaisissez un numero de Vehicule :");
+		// TODO : affichage de la routine de ce vehicule
 	}
 
 }
