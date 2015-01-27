@@ -18,5 +18,4 @@ public class Reservation {
 		}
 		return nbResaAjd;
 	}
-
 }

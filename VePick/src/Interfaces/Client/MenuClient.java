@@ -88,7 +88,8 @@ public class MenuClient {
 
 		Scanner sc = new Scanner(System.in);
 		int choix = 0;
-		System.out.println("Veuillez saisir le numéro de la station ou vous êtes : ");
+		System.out
+				.println("Veuillez saisir le numéro de la station ou vous êtes : ");
 		int numStation = sc.nextInt();
 		do {
 			System.out.println("1 - J'ai une carte d'abonnement");
@@ -103,29 +104,54 @@ public class MenuClient {
 					System.out.println("Veuillez saisir votre code secret: ");
 					int codeSecretClient = sc.nextInt();
 					try {
-						connexion = Client.identifierClient(Connexion.getConnexion(),
-								numCLient, codeSecretClient);
-						if(connexion){
-							int nbResa = Reservation.getNbResaAjd(Connexion.getConnexion(), numStation);
-							int nbVeloDispo = Station.getNbVeloDispo(Connexion.getConnexion(),numStation,nbResa);
-							int numVelo = Station.getVelo(Connexion.getConnexion(), numStation, nbVeloDispo, nbResa);
-							if(numVelo!=0){
-								 Location.locationAbonne(Connexion.getConnexion(),numCLient, numVelo, numStation);
-							}else{
-								System.out.println("Aucun vélo disponible dans votre station");
+						connexion = Client.identifierClient(
+								Connexion.getConnexion(), numCLient,
+								codeSecretClient);
+						if (connexion) {
+							int nbResa = Reservation.getNbResaAjd(
+									Connexion.getConnexion(), numStation);
+							int nbVeloDispo = Station.getNbVeloDispo(
+									Connexion.getConnexion(), numStation,
+									nbResa);
+							int numVelo = Station.getVelo(
+									Connexion.getConnexion(), numStation,
+									nbVeloDispo, nbResa);
+							if (numVelo != 0) {
+								Location.louer(Connexion.getConnexion(),
+										numCLient, numVelo, numStation);
+
+							} else {
+								System.out
+										.println("Aucun vélo disponible dans votre station");
 							}
 						}
 
 					} catch (SQLException e) {
 						e.printStackTrace();
 					}
-
 				}
-
 				break;
 			case 2:
-				/* afficher code secret généré */
-				Location.locationNonAbonne();
+				try {
+					//TODO get code secret + numéro CB 
+					int numClient = Client.creerNonAbonne(Connexion
+							.getConnexion());
+					
+					//END TODO
+					int nbResa = Reservation.getNbResaAjd(
+							Connexion.getConnexion(), numStation);
+					int nbVeloDispo = Station.getNbVeloDispo(
+							Connexion.getConnexion(), numStation, nbResa);
+					int numVelo = Station.getVelo(Connexion.getConnexion(),
+							numStation, nbVeloDispo, nbResa);
+					if (numVelo != 0) {
+						Location.louer(Connexion.getConnexion(), numClient,
+								numVelo, numStation);
+					}
+				} catch (SQLException e) {
+					e.printStackTrace();
+
+				}
 				break;
 			default:
 				break;

@@ -123,8 +123,8 @@ public class Station {
 		if (rsType.next()) {
 			PreparedStatement stPlageHoraire = conn
 					.prepareStatement("SELECT * FROM PlageHoraire WHERE idType = ? AND numStation = ?");
-			stPlageHoraire.setInt(2, numStation);
 			stPlageHoraire.setInt(1, rsType.getInt("idType"));
+			stPlageHoraire.setInt(2, numStation);
 			ResultSet rsPlageHoraire = stPlageHoraire.executeQuery();
 			if (rsPlageHoraire.next()) {
 				typeStation = rsType.getString("libelle");
@@ -135,5 +135,13 @@ public class Station {
 		stType.close();
 		rsType.close();
 		return typeStation;
+	}
+
+	public static void majVeloBornette(Connection conn, int numVelo) throws SQLException {
+		PreparedStatement stBornette = conn
+				.prepareStatement("UPDATE Bornette SET numVelo = NULL WHERE numVelo = ? ");
+		stBornette.setInt(1, numVelo);
+		stBornette.executeUpdate();
+		stBornette.close();
 	}
 }
