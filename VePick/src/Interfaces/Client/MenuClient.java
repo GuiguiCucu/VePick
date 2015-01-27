@@ -7,6 +7,9 @@ import java.util.Calendar;
 import java.util.Scanner;
 
 import Connexion.Connexion;
+import Requetes.Client;
+import Requetes.Location;
+import Requetes.Reservation;
 import Requetes.Station;
 
 public class MenuClient {
@@ -44,7 +47,7 @@ public class MenuClient {
 		case 3:
 			emprunterVelo();
 			break;
-		case 4 :
+		case 4:
 			rendreVelo();
 			break;
 		case 5:
@@ -60,31 +63,89 @@ public class MenuClient {
 
 	private void rendreVelo() {
 		System.out.println("\n--------------------------------");
-		System.out.println("---Client - Rendre v�lo---");
-		System.out.println("--------------------------------");	
+		System.out.println("---Client - Rendre v�lo---");
+		System.out.println("--------------------------------");
 		System.out.println("TODO");
-		/*Afficher borne libre station
-		 * Saisir code client
-		 * Yolo*/
+
+		/*
+		 * Afficher borne libre station Saisir code client Yolo
+		 */
+		System.out
+				.println("(Simulation)Veuillez saisir le numéro de la station ou vous êtes : ");
+		Scanner sc = new Scanner(System.in);
+		int numStation = sc.nextInt();
+		try {
+			Station.afficherBornesLibres(Connexion.getConnexion(), numStation);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private void emprunterVelo() {
 		System.out.println("\n--------------------------------");
-		System.out.println("---Client - Emprunter v�lo---");
-		System.out.println("--------------------------------");	
-		System.out.println("TODO");
+		System.out.println("---Client - Emprunter vélo---");
+		System.out.println("--------------------------------\n");
+
+		Scanner sc = new Scanner(System.in);
+		int choix = 0;
+		System.out.println("Veuillez saisir le numéro de la station ou vous êtes : ");
+		int numStation = sc.nextInt();
+		do {
+			System.out.println("1 - J'ai une carte d'abonnement");
+			System.out.println("2 - Je suis un nouveau client");
+			choix = sc.nextInt();
+			switch (choix) {
+			case 1:
+				boolean connexion = false;
+				while (!connexion) {
+					System.out.println("Veuillez saisir votre n°client: ");
+					int numCLient = sc.nextInt();
+					System.out.println("Veuillez saisir votre code secret: ");
+					int codeSecretClient = sc.nextInt();
+					try {
+						connexion = Client.identifierClient(Connexion.getConnexion(),
+								numCLient, codeSecretClient);
+						if(connexion){
+							int nbResa = Reservation.getNbResaAjd(Connexion.getConnexion(), numStation);
+							int nbVeloDispo = Station.getNbVeloDispo(Connexion.getConnexion(),numStation,nbResa);
+							int numVelo = Station.getVelo(Connexion.getConnexion(), numStation, nbVeloDispo, nbResa);
+							if(numVelo!=0){
+								 Location.locationAbonne(Connexion.getConnexion(),numCLient, numVelo, numStation);
+							}else{
+								System.out.println("Aucun vélo disponible dans votre station");
+							}
+						}
+
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+
+				}
+
+				break;
+			case 2:
+				/* afficher code secret généré */
+				Location.locationNonAbonne();
+				break;
+			default:
+				break;
+			}
+		} while (choix != 1 && choix != 2);
+		/* Afficher Borne et heure de rendu max (+12h) */
+
 	}
 
 	private void consultationStations() {
 		System.out.println("\n--------------------------------");
 		System.out.println("-Client - Consultation stations-");
 		System.out.println("--------------------------------");
+
 		try {
 			Station.afficherStations(Connexion.getConnexion());
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}	
-		
+		}
+
 	}
 
 	private void actionAbonnement() {
