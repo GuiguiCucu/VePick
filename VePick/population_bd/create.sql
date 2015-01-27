@@ -129,7 +129,7 @@ create table Location (
 	dateLocation date NOT NULL,
 	dateFinLocation date,
 	TypeStationDepart varchar(6) NOT NULL,
-	TypeStationArrivee varchar(6) NOT NULL,
+	TypeStationArrivee varchar(6),
 	constraint location_pk primary key (numClient, numVelo, dateLocation),
 	constraint location_fk1 foreign key (numClient) references Client(numClient),
 	constraint location_fk2 foreign key (numVelo) references Velo(numVelo),
