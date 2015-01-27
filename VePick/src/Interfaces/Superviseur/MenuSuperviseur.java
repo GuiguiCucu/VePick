@@ -1,20 +1,16 @@
 package Interfaces.Superviseur;
 
-import java.sql.Connection;
-import java.sql.Date;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Scanner;
 
 import Connexion.Connexion;
-import Interfaces.Client.MenuClient;
 import Requetes.Station;
 import Requetes.TacheRoutine;
 import Requetes.VehiculeRegulation;
+import Requetes.Velo;
 
 public class MenuSuperviseur {
-	
+
 	public static void main(String[] args) {
 		MenuSuperviseur ms = new MenuSuperviseur();
 		do {
@@ -22,7 +18,7 @@ public class MenuSuperviseur {
 			ms.analyseChoix();
 		} while (true);
 	}
-	
+
 	public void afficherMenu() {
 		System.out.println("\n--------------------------------");
 		System.out.println("--------Menu Superviseur--------");
@@ -35,7 +31,7 @@ public class MenuSuperviseur {
 		System.out.println("5 - Modifier les plages horaires V-, V+");
 		System.out.println("6 - Quitter");
 	}
-	
+
 	private void analyseChoix() {
 		Scanner sc = new Scanner(System.in);
 		int choix = sc.nextInt();
@@ -47,12 +43,12 @@ public class MenuSuperviseur {
 			System.out.println("souce");
 			break;
 		case 3:
-			System.out.println("fuuf");
+			consulterStation();
 			break;
-		case 4 :
+		case 4:
 			System.out.println("suus");
 			break;
-		case 5 :
+		case 5:
 			System.out.println("moi mon nez");
 			break;
 		case 6:
@@ -65,32 +61,58 @@ public class MenuSuperviseur {
 		}
 
 	}
-	
+
 	/**
 	 * consultation d'une routine en indiquant le numVehicule
 	 */
-	private void consulterRoutine(){
+	private void consulterRoutine() {
 		System.out.println("\n--------------------------------");
 		System.out.println("Superviseur - Consulter routine");
 		System.out.println("--------------------------------");
-		
+
 		// affichage de tous les vehicules
-		System.out.println("\nTous les vehicules de régulation :");	
+		System.out.println("\nTous les vehicules de régulation :");
 		try {
 			VehiculeRegulation.afficherVehicules(Connexion.getConnexion());
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+
 		// affichage de la routine
 		System.out.println("\nSaisissez un numero de Vehicule :");
 		Scanner sc = new Scanner(System.in);
 		int choix = sc.nextInt();
-		
-		try{
+
+		try {
 			TacheRoutine.afficherRoutine(Connexion.getConnexion(), choix);
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
-		catch(SQLException e){
+	}
+
+	private void consulterStation() {
+		System.out.println("\n--------------------------------");
+		System.out.println("-Superviseur - Consulter station");
+		System.out.println("--------------------------------");
+
+		// affichage de toutes les stations
+		System.out.println("\nToutes les stations :");
+		try {
+			Station.afficherStations(Connexion.getConnexion());
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		// affichage des velos de la station choisie
+		System.out.println("\nSaisissez un numero de station :");
+		Scanner sc = new Scanner(System.in);
+		int choix = sc.nextInt();
+
+		try {
+			System.out.println("Tous les velos de la station "+choix+" :\n");
+			Velo.afficherVeloStation(Connexion.getConnexion(), choix);
+			Velo.afficherNombreVelosStation(Connexion.getConnexion(), choix);
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
