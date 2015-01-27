@@ -29,7 +29,7 @@ BEGIN
   WHERE dateFinLocation IS NULL
   AND numVelo = :new.numVelo;
   
-  IF(numClient <> 0)
+  IF(estLoue <> 0)
   THEN 
   UPDATE Location SET dateFinLocation = NOW()
   END IF;

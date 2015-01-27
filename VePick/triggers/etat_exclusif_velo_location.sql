@@ -1,5 +1,5 @@
 CREATE OR REPLACE TRIGGER ETAT_EXCLUSIF_VELO_LOCATION
-  BEFORE UPDATE ON Bornette
+  BEFORE INSERT ON Location
   FOR EACH ROW
 DECLARE
   dateDernierChargement date;
@@ -22,7 +22,7 @@ BEGIN
   GROUP BY dateAction;
   
   IF(dateDernierDepot < dateDernierChargement)
-  THEN raise_application_error(-20000 , 'Impossible de louer un vélo s il se trouve dans un vehicule, il doit d abord etre deposé sur une bornette.');
+  THEN raise_application_error(-20000 , 'Impossible de louer un vélo s il se trouve dans un vehicule, il doit d abord etre deposé puis accroché sur une bornette.');
   END IF;
   
   
@@ -34,17 +34,6 @@ BEGIN
   THEN UPDATE Bornette SET numVelo = null WHERE numVelo = :new.numVelo
   END IF;
   
-  /*
-  SELECT numClient INTO estLoue
-  FROM Location
-  WHERE dateFinLocation IS NULL
-  AND numVelo = :new.numVelo;
-  
-  IF(numClient IS NOT NULL)
-  THEN 
-  UPDATE Location SET dateFinLocation = NOW()
-  END IF;
-  */
   
  
 END;
@@ -53,5 +42,9 @@ END;
 /*
 ===== TESTS =====
 
-TODO
+-- On sait que vélo X est accroché à une bornette, on tente de le louer par un client, verifier que le vélo est bien decroché de cette bornette
+--TODO
+
+--On sait que le Vélo X est dans un vehicule, on tente de le louer par un client, verifier qu'une erreur est retourné
+--TODO
 */
