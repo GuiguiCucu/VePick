@@ -152,7 +152,8 @@ public class MenuConducteur {
 
 		// enregistrerment dans ActionVehiculeVelo
 		try {
-			ActionVehicule.actionVelo(Connexion.getConnexion(), "reparation velo", numVehicule, numVelo);
+			ActionVehicule.actionVelo(Connexion.getConnexion(),
+					"reparation velo", numVehicule, numVelo);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -195,19 +196,22 @@ public class MenuConducteur {
 		int numVehicule = sc.nextInt();
 		System.out.println("\nSaisissez le numero du velo à déposer:");
 		int numVelo = sc.nextInt();
-		System.out.println("\nSaisissez le numero de station dans laquelle vous voulez deposer le vélo :");
+		System.out
+				.println("\nSaisissez le numero de station dans laquelle vous voulez deposer le vélo :");
 		int numStation = sc.nextInt();
-		
-		// rattacher le velo à la borne
+
+		// enregistrement de l'action
 		try {
-			Station.rattacherVeloBornette(Connexion.getConnexion(), numVelo, numStation);
+			ActionVehicule.actionVelo(Connexion.getConnexion(), "depot velo",
+					numVehicule, numVelo);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 
-		// enregistrement de l'action
+		// rattacher le velo à la borne
 		try {
-			ActionVehicule.actionVelo(Connexion.getConnexion(), "depot velo", numVehicule, numVelo);
+			Station.rattacherVeloBornette(Connexion.getConnexion(), numVelo,
+					numStation);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
