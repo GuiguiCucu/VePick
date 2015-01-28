@@ -44,7 +44,7 @@ public class MenuConducteur {
 			consulterRoutine();
 			break;
 		case 3:
-			System.out.println("TODO valid routine");
+			validerRoutine();
 			break;
 		case 4:
 			deplacerVeloChoix();
@@ -234,6 +234,44 @@ public class MenuConducteur {
 			ActionVehicule.actionVelo(Connexion.getConnexion(), "chargement velo", numVehicule, numVelo);
 		} catch (SQLException e) {
 			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * permet au conducteur de mettre a jour une tache
+	 */
+	private void validerRoutine(){
+		System.out.println("\n--------------------------------");
+		System.out.println("--Conducteur - Valider routine--");
+		System.out.println("--------------------------------\n\r");
+		System.out.println("\nSaisissez le numero de votre vehicule :");
+		Scanner sc = new Scanner(System.in);
+		int numVehicule = sc.nextInt();
+		System.out.println("\nSaisissez le numero de la tache à mettre à jour :");
+		int numTache = sc.nextInt();
+		System.out.println("\nSaisissez le rang de la tache à mettre à jour :");
+		int rang = sc.nextInt();
+		System.out.println("1 - Tache terminée");
+		System.out.println("2 - Echec d'une tache");
+		int maj = sc.nextInt();
+		
+		switch (maj) {
+		case 1:
+			try {
+				TacheRoutine.MAJRoutine(Connexion.getConnexion(), numVehicule, numTache, rang, "Termine");
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			break;
+		case 2:
+			try {
+				TacheRoutine.MAJRoutine(Connexion.getConnexion(), numVehicule, numTache, rang, "Echec");
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			break;
+		default:
+			break;
 		}
 	}
 }
