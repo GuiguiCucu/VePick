@@ -48,8 +48,11 @@ BEGIN
   END IF;
 	  
 	  
-  IF(dateDernierDepot < dateDernierChargement OR dateDernierChargement IS NULL OR dateDernierDepot IS NULL )
-  THEN raise_application_error(-20000 , 'Impossible d accorcher un vélo à une bornette s il se trouve dans un vehicule, il doit d abord etre deposé.');
+  IF(dateDernierDepot IS NOT NULL AND dateDernierChargement IS NOT NULL)
+  	  THEN
+	  IF(dateDernierDepot < dateDernierChargement OR (dateDernierDepot IS NULL AND dateDernierChargement IS NOT NULL))
+	  		THEN raise_application_error(-20000 , 'Impossible d accorcher un vélo à une bornette s il se trouve dans un vehicule, il doit d abord etre deposé.');
+	  END IF;
   END IF;
   
   SELECT COUNT(numClient) INTO estLoue
