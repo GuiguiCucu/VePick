@@ -55,6 +55,10 @@ BEGIN
 	  END IF;
   END IF;
   
+  IF(dateDernierDepot IS NULL AND dateDernierChargement IS NOT NULL)
+	  		THEN raise_application_error(-20000 , 'Impossible d accorcher un vélo à une bornette s il se trouve dans un vehicule, il doit d abord etre deposé.');
+	END IF;
+  
   SELECT COUNT(numClient) INTO estLoue
   FROM Location
   WHERE dateFinLocation IS NULL
@@ -84,6 +88,6 @@ END;
 -- On sait que vélo X est en location par un Client Y, on tente de l'acrocher à une bornette, verifier que la dateFinLocation est bien remplie
 UPDATE Bornette SET numVelo = 4 WHERE numBornette = 4;
 
---On sait que le Vélo X est dans le vehicule Y, on tente de l'accrocher à une bornette
+--On sait que le Vélo X est dans le vehicule Y, on tente de l'accrocher à une bornette, retourne une erreur
 UPDATE Bornette SET numVelo = 5 WHERE numBornette = 5;
 */

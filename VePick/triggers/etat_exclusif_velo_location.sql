@@ -27,8 +27,7 @@ BEGIN
 	  AND numVelo = :new.numVelo
 	  AND nomAction = 'Chargement velo'
 	  GROUP BY dateAction;
-  END IF;
-  
+  END IF;  
   
   SELECT COUNT(dateAction) INTO nbDateDepot
   FROM ActionVehiculeVelo AVV, ActionVehicule AV
@@ -50,25 +49,25 @@ BEGIN
 --  bothNotNull := (dateDernierChargement IS NOT NULL AND dateDernierDepot IS NULL) OR (dateDernierChargement IS NULL AND dateDernierDepot IS NOT NULL) OR (dateDernierChargement IS NOT NULL AND dateDernierDepot IS NOT NULL);
   IF(dateDernierDepot IS NOT NULL AND dateDernierChargement IS NOT NULL)
   	  THEN
-	  IF(dateDernierDepot < dateDernierChargement OR (dateDernierDepot IS NULL AND dateDernierChargement IS NOT NULL))
+  	  
+	  IF(dateDernierDepot < dateDernierChargement)
 	  		THEN raise_application_error(-20000 , 'Impossible de louer un vélo s il se trouve dans un vehicule, il doit d abord etre deposé puis accroché sur une bornette.');
 	  END IF;
+	 
   END IF;
+  
+  IF(dateDernierDepot IS NULL AND dateDernierChargement IS NOT NULL)
+	  		THEN raise_application_error(-20000 , 'Impossible de louer un vélo s il se trouve dans un vehicule, il doit d abord etre deposé puis accroché sur une bornette.');
+	END IF;
   
   SELECT COUNT(numVelo) INTO surBornette
   FROM Bornette
   WHERE numVelo = :new.numVelo;
   
-  SELECT COUNT(numVelo)
-  FROM Bornette
-  WHERE numVelo = 6;
-  
   IF( surBornette <> 0)
-  THEN UPDATE Bornette SET numVelo = null WHERE numVelo = :new.numVelo;
+  	THEN UPDATE Bornette SET numVelo = null WHERE numVelo = :new.numVelo;
   END IF;
-  
-  
- 
+   
 END;
 /
 
@@ -79,6 +78,8 @@ END;
 --INSERT INTO Location values (6, 6, SYSDATE,NULL, 'Vplus', NULL);
 
 
---On sait que le Vélo X est dans un vehicule, on tente de le louer par un client, verifier qu'une erreur est retourné
---TODO
+--On sait que le Vélo 5 est dans un vehicule, on tente de le louer par le client 6 , verifier qu'une erreur est retourné
+--DELETE FROM Location where numclient = 6;
+--INSERT INTO Location values (6, 5, SYSDATE,NULL, 'Vplus', NULL);
 */
+
