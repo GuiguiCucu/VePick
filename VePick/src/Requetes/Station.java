@@ -15,13 +15,11 @@ public class Station {
 
 		while (rsStation.next()) {
 			PreparedStatement stType = conn
-					.prepareStatement("SELECT idType, libelle FROM TypeStation WHERE idType IN  (SELECT idType FROM PlageHoraire WHERE numStation = ? )");
+					.prepareStatement("SELECT idType, libelle FROM TypeStation WHERE idType IN  (SELECT idType FROM PlageHoraire WHERE numStation = ? AND trunc(dateDebut) - trunc(sysdate) = 0  )");
 			stType.setInt(1, rsStation.getInt("numStation"));
+			// SELECT * FROM plagehoraire WHERE trunc(dateDebut) - trunc(sysdate) = 0;
+			//INSERT INTO PlageHoraire values (4, 1, 3, TO_DATE('2015/01/28 12:30:00', 'yyyy/mm/dd hh24:mi:ss'), TO_DATE('2015/01/28 15:30:00', 'yyyy/mm/dd hh24:mi:ss'));
 			ResultSet rsType = stType.executeQuery();
-
-			// AND ? BETWEEN dateDebut AND dateFin
-			// Dangereux : n'affiche que les stations avec une plage horaire
-			// renseignée (sans les lignes du dessus)
 			if (rsType.next()) {
 				PreparedStatement stPlageHoraire = conn
 						.prepareStatement("SELECT * FROM PlageHoraire WHERE idType = ? AND numStation = ?");
@@ -61,7 +59,7 @@ public class Station {
 	public static void afficherBornesLibres(Connection conn, int numStation)
 			throws SQLException {
 		PreparedStatement stBornette = conn
-				.prepareStatement("SELECT numBornette FROM Bornette WHERE numStation = ?");
+				.prepareStatement("SELECT numBornette FROM Bornette WHERE numStation = ? and numVelo IS NULL");
 		stBornette.setInt(1, numStation);
 		ResultSet rsBornette = stBornette.executeQuery();
 		// int rowcount = 0;
