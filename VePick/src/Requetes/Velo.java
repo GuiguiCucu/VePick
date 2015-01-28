@@ -26,6 +26,24 @@ public class Velo {
 	}
 	
 	/**
+	 * Affiche tous les velos HS
+	 * @param conn
+	 * @throws SQLException
+	 */
+	public static void afficherVelosHS(Connection conn) throws SQLException{
+		PreparedStatement stVelos = conn.prepareStatement("SELECT * FROM Velo WHERE etat='HS'");
+		ResultSet rsVelos = stVelos.executeQuery();
+		while(rsVelos.next()){
+			System.out.println("------");
+			System.out.println("-Velo numero : "+rsVelos.getInt("numVelo"));
+			System.out.println("-Modele : "+rsVelos.getString("modele"));
+			System.out.println("-Mise en service : "+new java.util.Date(rsVelos.getTimestamp("dateMiseEnService").getTime()));
+			System.out.println("-Etat : "+rsVelos.getString("etat"));
+			System.out.println("------");
+		}
+	}
+	
+	/**
 	 * affichage des velos d'une station
 	 * @param conn
 	 * @param numStation
@@ -85,6 +103,21 @@ public class Velo {
 		ResultSet rsVelo = stVelo.executeQuery();
 		if(rsVelo.next()){
 			System.out.println("L'état du velo a été mis à jour de OK à HS.");
+		}
+	}
+	
+	/**
+	 * etat d'un velo HS -> OK
+	 * @param conn
+	 * @param numVelo
+	 * @throws SQLException
+	 */
+	public static void reparerVelo(Connection conn, int numVelo) throws SQLException{
+		PreparedStatement stVelo = conn.prepareStatement("UPDATE Velo SET etat='OK' WHERE numVelo = ?");
+		stVelo.setInt(1, numVelo);
+		ResultSet rsVelo = stVelo.executeQuery();
+		if(rsVelo.next()){
+			System.out.println("L'état du velo a été mis à jour de HS à OK.");
 		}
 	}
 }

@@ -4,12 +4,13 @@ import java.sql.SQLException;
 import java.util.Scanner;
 
 import Connexion.Connexion;
+import Requetes.ActionVehicule;
 import Requetes.TacheRoutine;
 import Requetes.VehiculeRegulation;
 import Requetes.Velo;
 
 public class MenuConducteur {
-	
+
 	public static void main(String[] args) {
 		MenuConducteur mc = new MenuConducteur();
 		do {
@@ -17,7 +18,7 @@ public class MenuConducteur {
 			mc.analyseChoix();
 		} while (true);
 	}
-	
+
 	public void afficherMenu() {
 		System.out.println("\n--------------------------------");
 		System.out.println("---------Menu Conducteur--------");
@@ -30,7 +31,7 @@ public class MenuConducteur {
 		System.out.println("5 - Réparer un vélo");
 		System.out.println("6 - Quitter");
 	}
-	
+
 	private void analyseChoix() {
 		Scanner sc = new Scanner(System.in);
 		int choix = sc.nextInt();
@@ -48,7 +49,7 @@ public class MenuConducteur {
 			System.out.println("TODO déplacer vélo");
 			break;
 		case 5:
-			System.out.println("TODO réparer vélo");
+			reparerVelo();
 			break;
 		case 6:
 			Connexion.close();
@@ -60,42 +61,40 @@ public class MenuConducteur {
 		}
 
 	}
-	
+
 	/**
 	 * permet de changer l'etat d'un vélo OK -> HS
 	 */
-	private void veloEndommage(){
+	private void veloEndommage() {
 		System.out.println("\n--------------------------------");
 		System.out.println("-- Conducteur - Velo edommage --");
 		System.out.println("--------------------------------");
-		
+
 		// affichage de tous les velos
 		System.out.println("Tous les velos enregistrés :");
-		try{
+		try {
 			Velo.afficherVelos(Connexion.getConnexion());
-		}
-		catch(SQLException e){
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+
 		// mise a jour de l'etat d'un velo
 		System.out.println("\nSaisissez un numero de velo :");
 		Scanner sc = new Scanner(System.in);
 		int choix = sc.nextInt();
-		
-		try{
+
+		try {
 			Velo.declarerEndommage(Connexion.getConnexion(), choix);
-		}
-		catch(SQLException e){
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 
 	}
-	
+
 	/**
 	 * consulter la routine d'un vehicule
 	 */
-	private void consulterRoutine(){
+	private void consulterRoutine() {
 		System.out.println("\n--------------------------------");
 		System.out.println("-Conducteur - Consulter routine-");
 		System.out.println("--------------------------------");
@@ -115,6 +114,42 @@ public class MenuConducteur {
 
 		try {
 			TacheRoutine.afficherRoutine(Connexion.getConnexion(), choix);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Reparer un velo
+	 */
+	private void reparerVelo() {
+		System.out.println("\n--------------------------------");
+		System.out.println("--- Conducteur - Reparer velo --");
+		System.out.println("--------------------------------");
+
+		// affichage de tous les velos HS
+		System.out.println("Tous les velos HS enregistrés :");
+		try {
+			Velo.afficherVelosHS(Connexion.getConnexion());
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		// selection du velo a reparer
+		System.out.println("\nSaisissez un numero de velo :");
+		Scanner sc = new Scanner(System.in);
+		int choix = sc.nextInt();
+		
+		// MAJ de l'etat du velo
+		try {
+			Velo.reparerVelo(Connexion.getConnexion(), choix);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		// enregistrerment dans ActionVehiculeVelo
+		try {
+			ActionVehicule.actionVelo(Connexion.getConnexion(), "reparation velo");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
