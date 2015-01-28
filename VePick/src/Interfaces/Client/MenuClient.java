@@ -93,68 +93,14 @@ public class MenuClient {
 					int choix = sc.nextInt();
 					switch (choix) {
 					case 1:
-						System.out
-								.println("Veuillez saisir le numéro de la station ou vous êtes : ");
-						int numStation = sc.nextInt();
-
-						String dateReservationUnique = "";
-						while (!dateReservationUnique
-								.matches("([0-9]{2})-([0-9]{2})-([0-9]{4})")) {
-							System.out
-									.println("Veuillez saisir le jour à réserver (jj-mm-yyyy) :");
-							dateReservationUnique = sc.nextLine();
-						}
-
-						// date du jour réservé
-						SimpleDateFormat formatter = new SimpleDateFormat(
-								"dd-MM-yyyy");
-						java.util.Date dateReservationUtil = null;
-						try {
-							dateReservationUtil = formatter
-									.parse(dateReservationUnique);
-						} catch (ParseException e) {
-							e.printStackTrace();
-						}
-						Calendar cdr = Calendar.getInstance();
-						cdr.setTime(dateReservationUtil);
-						cdr.set(Calendar.HOUR_OF_DAY, 0);
-						cdr.set(Calendar.MINUTE, 0);
-						cdr.set(Calendar.SECOND, 0);
-						cdr.set(Calendar.MILLISECOND, 0);
-						java.sql.Date dateReservation = new Date(
-								dateReservationUtil.getTime());
-
-						// dateCourante
-						java.util.Calendar cal = java.util.Calendar
-								.getInstance();
-						cal.set(Calendar.HOUR_OF_DAY, 0);
-						cal.set(Calendar.MINUTE, 0);
-						cal.set(Calendar.SECOND, 0);
-						cal.set(Calendar.MILLISECOND, 0);
-						java.util.Date utilDate = cal.getTime();
-						java.sql.Date now = new Date(utilDate.getTime());
-
-						SimpleDateFormat sdf = new SimpleDateFormat(
-								"dd-MMM-yyyy");
-						String dateResa = sdf.format(now);
-						if (dateReservation.after(now)) {
-							Reservation.reserverUneJournee(
-									Connexion.getConnexion(), numStation,
-									numCLient, dateReservationUnique,
-									"En attente");
-						} else if (dateReservation.equals(now)) {
-							Reservation.reserverUneJournee(
-									Connexion.getConnexion(), numStation,
-									numCLient, dateReservationUnique,
-									"En cours");
-						} else {
-							System.out
-									.println("La date de réservation est antérieure à aujourd'hui.");
-						}
+						emprunterUneJournee(numCLient);
 						break;
 					case 2:
+						System.out.println("CAS chiant");
+						empruntRepetSurPeriode(numCLient);
 						break;
 					case 3:
+						emprunterPeriodeComplete(numCLient);
 						break;
 					default:
 						reserverVelo();
@@ -164,6 +110,259 @@ public class MenuClient {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
+		}
+
+	}
+
+	private void empruntRepetSurPeriode(int numCLient) {
+		Scanner sc = new Scanner(System.in);
+		System.out
+				.println("Veuillez saisir le numéro de la station ou vous êtes : ");
+		int numStation = sc.nextInt();
+
+		String dateDebutPeriode = "";
+		while (!dateDebutPeriode.matches("([0-9]{2})-([0-9]{2})-([0-9]{4})")) {
+			System.out
+					.println("Veuillez saisir le jour de début de la période (jj-mm-yyyy) :");
+			dateDebutPeriode = sc.nextLine();
+		}
+		String dateFinPeriode = "";
+		while (!dateFinPeriode.matches("([0-9]{2})-([0-9]{2})-([0-9]{4})")) {
+			System.out
+					.println("Veuillez saisir le jour de fin de la période (jj-mm-yyyy) :");
+			dateFinPeriode = sc.nextLine();
+		}
+
+		int delaiRepet = 0;
+		System.out
+				.println("Veuillez saisir le délai entre deux réservations :");
+		delaiRepet = sc.nextInt();
+		System.out.println("END SAISIES");
+
+		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+		// date de début de la période
+		java.util.Date dateReservationDebutPeriodeUtil = null;
+		try {
+			dateReservationDebutPeriodeUtil = formatter.parse(dateDebutPeriode);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		Calendar cdr = Calendar.getInstance();
+		cdr.setTime(dateReservationDebutPeriodeUtil);
+		cdr.set(Calendar.HOUR_OF_DAY, 0);
+		cdr.set(Calendar.MINUTE, 0);
+		cdr.set(Calendar.SECOND, 0);
+		cdr.set(Calendar.MILLISECOND, 0);
+		java.sql.Date dateReservationDebutPeriode = new Date(
+				dateReservationDebutPeriodeUtil.getTime());
+
+		// date de fin de la période
+		java.util.Date dateReservationFinPeriodeUtil = null;
+		try {
+			dateReservationFinPeriodeUtil = formatter.parse(dateFinPeriode);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		Calendar cdr2 = Calendar.getInstance();
+		cdr2.setTime(dateReservationFinPeriodeUtil);
+		cdr2.set(Calendar.HOUR_OF_DAY, 0);
+		cdr2.set(Calendar.MINUTE, 0);
+		cdr2.set(Calendar.SECOND, 0);
+		cdr2.set(Calendar.MILLISECOND, 0);
+		java.sql.Date dateReservationFinPeriode = new Date(
+				dateReservationFinPeriodeUtil.getTime());
+
+		// dateCourante
+		java.util.Calendar cal = java.util.Calendar.getInstance();
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		java.util.Date utilDate = cal.getTime();
+		java.sql.Date now = new Date(utilDate.getTime());
+
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy");
+		String dateAjd = sdf.format(now);
+		
+		System.out.println("END DATE");
+
+		if (dateReservationFinPeriode.after(dateReservationDebutPeriode)) {
+			if (dateReservationDebutPeriode.after(now)) {
+				if (dateReservationFinPeriode.after(now)) {
+					String etat = "En attente";
+					if (dateReservationDebutPeriodeUtil.equals(now)) {
+						etat = "En cours";
+					}
+					try {
+						System.out.println("GO INSERT");
+						Reservation.reserverJourPeriode(
+								Connexion.getConnexion(), numCLient,
+								numStation, dateReservationDebutPeriodeUtil,
+								dateDebutPeriode, dateFinPeriode, etat, delaiRepet);
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+
+				} else {
+					System.out
+							.println("La date de fin de la période est déjà passée");
+				}
+			} else {
+				System.out
+						.println("La date de début de la période est déjà passée");
+			}
+
+		} else {
+			System.out.println("Vos dates de période sont incohérentes");
+		}
+
+	}
+
+	private void emprunterPeriodeComplete(int numCLient) {
+		Scanner sc = new Scanner(System.in);
+		System.out
+				.println("Veuillez saisir le numéro de la station ou vous êtes : ");
+		int numStation = sc.nextInt();
+
+		String dateDebutPeriode = "";
+		while (!dateDebutPeriode.matches("([0-9]{2})-([0-9]{2})-([0-9]{4})")) {
+			System.out
+					.println("Veuillez saisir le jour de début de la période (jj-mm-yyyy) :");
+			dateDebutPeriode = sc.nextLine();
+		}
+		String dateFinPeriode = "";
+		while (!dateFinPeriode.matches("([0-9]{2})-([0-9]{2})-([0-9]{4})")) {
+			System.out
+					.println("Veuillez saisir le jour de fin de la période (jj-mm-yyyy) :");
+			dateFinPeriode = sc.nextLine();
+		}
+
+		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+		// date de début de la période
+		java.util.Date dateReservationDebutPeriodeUtil = null;
+		try {
+			dateReservationDebutPeriodeUtil = formatter.parse(dateDebutPeriode);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		Calendar cdr = Calendar.getInstance();
+		cdr.setTime(dateReservationDebutPeriodeUtil);
+		cdr.set(Calendar.HOUR_OF_DAY, 0);
+		cdr.set(Calendar.MINUTE, 0);
+		cdr.set(Calendar.SECOND, 0);
+		cdr.set(Calendar.MILLISECOND, 0);
+		java.sql.Date dateReservationDebutPeriode = new Date(
+				dateReservationDebutPeriodeUtil.getTime());
+
+		// date de fin de la période
+		java.util.Date dateReservationFinPeriodeUtil = null;
+		try {
+			dateReservationFinPeriodeUtil = formatter.parse(dateFinPeriode);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		Calendar cdr2 = Calendar.getInstance();
+		cdr2.setTime(dateReservationFinPeriodeUtil);
+		cdr2.set(Calendar.HOUR_OF_DAY, 0);
+		cdr2.set(Calendar.MINUTE, 0);
+		cdr2.set(Calendar.SECOND, 0);
+		cdr2.set(Calendar.MILLISECOND, 0);
+		java.sql.Date dateReservationFinPeriode = new Date(
+				dateReservationFinPeriodeUtil.getTime());
+
+		// dateCourante
+		java.util.Calendar cal = java.util.Calendar.getInstance();
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		java.util.Date utilDate = cal.getTime();
+		java.sql.Date now = new Date(utilDate.getTime());
+
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy");
+		String dateAjd = sdf.format(now);
+
+		if (dateReservationFinPeriode.after(dateReservationDebutPeriode)) {
+			if (dateReservationDebutPeriode.after(now)) {
+				if (dateReservationFinPeriode.after(now)) {
+					String etat = "En attente";
+					if (dateReservationDebutPeriodeUtil.equals(now)) {
+						etat = "En cours";
+					}
+					try {
+						Reservation.reserverUnePeriode(
+								Connexion.getConnexion(), numCLient,
+								numStation, dateReservationDebutPeriodeUtil,
+								dateDebutPeriode, dateFinPeriode, etat);
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+
+				} else {
+					System.out
+							.println("La date de fin de la période est déjà passée");
+				}
+			} else {
+				System.out
+						.println("La date de début de la période est déjà passée");
+			}
+
+		} else {
+			System.out.println("Vos dates de période sont incohérentes");
+		}
+
+	}
+
+	private void emprunterUneJournee(int numCLient) throws SQLException {
+		Scanner sc = new Scanner(System.in);
+		System.out
+				.println("Veuillez saisir le numéro de la station ou vous êtes : ");
+		int numStation = sc.nextInt();
+
+		String dateReservationUnique = "";
+		while (!dateReservationUnique
+				.matches("([0-9]{2})-([0-9]{2})-([0-9]{4})")) {
+			System.out
+					.println("Veuillez saisir le jour à réserver (jj-mm-yyyy) :");
+			dateReservationUnique = sc.nextLine();
+		}
+
+		// date du jour réservé
+		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+		java.util.Date dateReservationUtil = null;
+		try {
+			dateReservationUtil = formatter.parse(dateReservationUnique);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		Calendar cdr = Calendar.getInstance();
+		cdr.setTime(dateReservationUtil);
+		cdr.set(Calendar.HOUR_OF_DAY, 0);
+		cdr.set(Calendar.MINUTE, 0);
+		cdr.set(Calendar.SECOND, 0);
+		cdr.set(Calendar.MILLISECOND, 0);
+		java.sql.Date dateReservation = new Date(dateReservationUtil.getTime());
+
+		// dateCourante
+		java.util.Calendar cal = java.util.Calendar.getInstance();
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		java.util.Date utilDate = cal.getTime();
+		java.sql.Date now = new Date(utilDate.getTime());
+
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy");
+		String dateResa = sdf.format(now);
+		if (dateReservation.after(now)) {
+			Reservation.reserverUneJournee(Connexion.getConnexion(),
+					numStation, numCLient, dateReservationUnique, "En attente");
+		} else if (dateReservation.equals(now)) {
+			Reservation.reserverUneJournee(Connexion.getConnexion(),
+					numStation, numCLient, dateReservationUnique, "En cours");
+		} else {
+			System.out
+					.println("La date de réservation est antérieure à aujourd'hui.");
 		}
 
 	}
@@ -338,4 +537,5 @@ public class MenuClient {
 				.println("Votre abonnement a ete pris en compte. Date d'expiration : "
 						+ sdf.format(dateFinAbo));
 	}
+
 }
