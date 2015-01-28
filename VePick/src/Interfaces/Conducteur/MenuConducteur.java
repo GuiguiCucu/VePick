@@ -182,13 +182,16 @@ public class MenuConducteur {
 			deposerVelo();
 			break;
 		case 2:
-			// TODO chargerVelo();
+			chargerVelo();
 			break;
 		default:
 			break;
 		}
 	}
 
+	/**
+	 * enregistrement du depot de velo
+	 */
 	private void deposerVelo() {
 		// selection du vehicule, et du velo a reparer
 		System.out.println("\nSaisissez le numero de votre vehicule :");
@@ -196,8 +199,7 @@ public class MenuConducteur {
 		int numVehicule = sc.nextInt();
 		System.out.println("\nSaisissez le numero du velo à déposer:");
 		int numVelo = sc.nextInt();
-		System.out
-				.println("\nSaisissez le numero de station dans laquelle vous voulez deposer le vélo :");
+		System.out.println("\nSaisissez le numero de station dans laquelle vous voulez deposer le vélo :");
 		int numStation = sc.nextInt();
 
 		// enregistrement de l'action
@@ -212,6 +214,24 @@ public class MenuConducteur {
 		try {
 			Station.rattacherVeloBornette(Connexion.getConnexion(), numVelo,
 					numStation);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * enregistrement du chargement
+	 */
+	private void chargerVelo(){
+		System.out.println("\nSaisissez le numero de votre vehicule :");
+		Scanner sc = new Scanner(System.in);
+		int numVehicule = sc.nextInt();
+		System.out.println("\nSaisissez le numero du velo à charger:");
+		int numVelo = sc.nextInt();
+		
+		// enregistrement du chargement (un trigger détache automatiquement le velo de sa bornette)
+		try {
+			ActionVehicule.actionVelo(Connexion.getConnexion(), "chargement velo", numVehicule, numVelo);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
