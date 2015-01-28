@@ -63,6 +63,7 @@ INSERT INTO Bornette values (10, 'HS', 4, NULL);
 INSERT INTO VehiculeRegulation values (1, 'Traffic', TO_DATE('2015/01/01 16:00:00', 'yyyy/mm/dd hh24:mi:ss'), 10);
 INSERT INTO VehiculeRegulation values (2, 'Transporteur T4', TO_DATE('2015/01/01 16:00:00', 'yyyy/mm/dd hh24:mi:ss'), 10);
 INSERT INTO VehiculeRegulation values (3, 'X-Wing', TO_DATE('2015/01/01 16:00:00', 'yyyy/mm/dd hh24:mi:ss'), 10);
+INSERT INTO VehiculeRegulation values (4, 'USS-Enterprise', TO_DATE('2015/01/01 16:00:00', 'yyyy/mm/dd hh24:mi:ss'), 2);
 
 INSERT INTO Client values (1, 422, '4578 7144 7889 4512');
 INSERT INTO Client values (2, 423, '4578 7144 7889 7412');

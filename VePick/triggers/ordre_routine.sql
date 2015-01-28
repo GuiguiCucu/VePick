@@ -52,19 +52,4 @@ UPDATE TacheRoutine
 SET etat='Echec'
 WHERE numVehicule=1 AND numTache=1 AND rang=3;
 
-SELECT count(numTache)
-	FROM TacheRoutine 
-	WHERE numVehicule = 1 AND numTache = 1 
-	AND rang > 2
-	AND numVehicule IN (SELECT numVehicule
-						FROM TacheRoutine
-						WHERE etat <> 'En attente')
-	AND numTache IN (SELECT numTache
-						FROM TacheRoutine
-						WHERE etat <> 'En attente')
-	AND rang IN (SELECT rang
-						FROM TacheRoutine
-						WHERE etat <> 'En attente');
-
-SELECT MIN(rang) FROM TacheRoutine WHERE numVehicule=1 AND etat='En attente';
 */

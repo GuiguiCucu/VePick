@@ -7,3 +7,6 @@ start remise_noncumulable_abonne.sql
 start etat_exclusif_velo_location.sql
 start etat_exclusif_velo_vehicule.sql
 start etat_exclusif_velo_bornette.sql
+start rang_tache.sql
+start ordre_routine.sql
+start capa_vehicule.sql
