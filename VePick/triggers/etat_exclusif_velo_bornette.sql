@@ -6,26 +6,49 @@ DECLARE
   dateDernierDepot date;
   estLoue int;
   
+  nbDateCharg int;
+  nbDateDepot int;
+  
   curDate date;
 BEGIN
+
 	
-	DBMS_OUTPUT.ENABLE;
-	
-  SELECT MAX(dateAction) INTO dateDernierChargement
+	SELECT COUNT(dateAction) INTO nbDateCharg
   FROM ActionVehiculeVelo AVV, ActionVehicule AV
   WHERE AVV.idAction = AV.idAction
   AND numVelo = :new.numVelo
-  AND nomAction = 'Chargement velo'
-  GROUP BY dateAction;
+  AND nomAction = 'Chargement velo';
+	
+  IF(nbDateCharg <> 0)
+  THEN
+	  SELECT MAX(dateAction) INTO dateDernierChargement
+	  FROM ActionVehiculeVelo AVV, ActionVehicule AV
+	  WHERE AVV.idAction = AV.idAction
+	  AND numVelo = :new.numVelo
+	  AND nomAction = 'Chargement velo'
+	  GROUP BY dateAction;
+  END IF;
   
-  SELECT MAX(dateAction) INTO dateDernierDepot
+  
+  SELECT COUNT(dateAction) INTO nbDateDepot
   FROM ActionVehiculeVelo AVV, ActionVehicule AV
   WHERE AVV.idAction = AV.idAction
   AND numVelo = :new.numVelo
-  AND nomAction = 'Depot velo'
-  GROUP BY dateAction;
+  AND nomAction = 'Depot velo';
   
-  IF(dateDernierDepot < dateDernierChargement)
+  
+  IF(nbDateDepot <> 0)
+  THEN
+	  SELECT MAX(dateAction) INTO dateDernierDepot
+	  FROM ActionVehiculeVelo AVV, ActionVehicule AV
+	  WHERE AVV.idAction = AV.idAction
+	  AND numVelo = :new.numVelo
+	  AND nomAction = 'Depot velo'
+	  GROUP BY dateAction;
+  END IF;
+	  
+	  
+  IF(dateDernierDepot < dateDernierChargement OR dateDernierChargement IS NULL OR dateDernierDepot IS NULL )
   THEN raise_application_error(-20000 , 'Impossible d accorcher un vélo à une bornette s il se trouve dans un vehicule, il doit d abord etre deposé.');
   END IF;
   
@@ -33,21 +56,21 @@ BEGIN
   FROM Location
   WHERE dateFinLocation IS NULL
   AND numVelo = :new.numVelo;
-  		
-  DBMS_OUTPUT.PUT_LINE(estLoue);
-  
+ 
+      
   IF(estLoue <> 0)
-  THEN 
-  	DBMS_OUTPUT.PUT_LINE('le velo est loue');
-  
+  THEN   
   		UPDATE Location SET dateFinLocation = SYSDATE
   		WHERE dateFinLocation IS NULL 
   		AND numVelo = :new.numVelo;
   END IF;
   
-  EXCEPTION
-   When NO_DATA_FOUND then
-   	curDate := SYSDATE; 
+  
+  ----------------------------------------------------------------------
+--  EXCEPTION
+--   When NO_DATA_FOUND then
+--			curDate := SYSDATE;
+  ----------------------------------------------------------------------
   
 END;
 /
