@@ -16,6 +16,8 @@ public class Reservation {
 		if(rsJoursReserves.next()){
 			nbResaAjd= rsJoursReserves.getInt("nbResaAJD");
 		}
+		stJoursReserves.close();
+		rsJoursReserves.close();
 		return nbResaAjd;
 	}
 }

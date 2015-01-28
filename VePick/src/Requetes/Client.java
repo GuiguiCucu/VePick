@@ -49,23 +49,52 @@ public class Client {
 			calendar.setTime(rsClient.getDate("dateAbonnement"));
 			calendar.add(Calendar.YEAR, 1);
 			Date dateFinAbo = new Date(calendar.getTimeInMillis());
+			//test validité abonemment
 			if (dateFinAbo.after(now)) {
 				abonnementValide = true;
 			}
 		}
+		stClient.close();
+		rsClient.close();
 		return abonnementValide;
 	}
 
-	public static int creerNonAbonne(Connection conn) {
-		//GÃ©nÃ©rer code abo non utilisÃ©
-//		PreparedStatement stLocAbo = conn
-//				.prepareStatement("INSERT INTO Client values (?, ?, ?)");
-//		stLocAbo.setInt(1, numCLient);
-//		stLocAbo.setInt(2, codeSecret);
-//		stLocAbo.setString(2, codeCB);
-//		String typeStation = Station.getTypeStation(conn, numStation);
-//		stLocAbo.setString(3, typeStation);
-//		stLocAbo.executeUpdate();
-		return 0;
+	public static int creerNonAbonne(Connection conn, String numCB) throws SQLException {
+		//Génération automatique d'un id
+        int numCLient = 0;
+        PreparedStatement stNumClient = conn
+				.prepareStatement("SELECT count(numClient) as nbIdClient FROM Client");
+		ResultSet rsNumClient = stNumClient.executeQuery();
+
+		if (rsNumClient.next()) {
+			numCLient = rsNumClient.getInt("nbIdClient") +1;
+		}
+        
+		//Création du client
+		
+		PreparedStatement stClient = conn.prepareStatement("INSERT INTO Client values (?, ?, ?)");
+		int codeSecret = 100 + (int)(Math.random() * ((999 - 100) + 1));
+		stClient.setInt(1, numCLient);
+		stClient.setInt(2, codeSecret);
+		stClient.setString(3, numCB);
+		stClient.executeUpdate();
+		
+
+        //Création du non abonné
+        PreparedStatement stNonAbo = conn.prepareStatement("INSERT INTO NonAbonne values (?, sysdate)");
+        
+        stNonAbo.setInt(1, numCLient);
+        stNonAbo.executeUpdate();
+        
+        stNumClient.close();
+        rsNumClient.close();
+        stClient.close();
+        stNonAbo.close();
+        
+        return numCLient;
+	}
+	
+	public static void creerAbonnement(Connection connection, Date dateAbonnement){
+		
 	}
 }

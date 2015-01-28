@@ -117,7 +117,7 @@ public class MenuClient {
 									Connexion.getConnexion(), numStation,
 									nbVeloDispo, nbResa);
 							if (numVelo != 0) {
-								Location.louer(Connexion.getConnexion(),
+								Location.louerAbo(Connexion.getConnexion(),
 										numCLient, numVelo, numStation);
 
 							} else {
@@ -133,11 +133,13 @@ public class MenuClient {
 				break;
 			case 2:
 				try {
-					//TODO get code secret + numÃ©ro CB 
+					System.out.println("Veuillez saisir votre numéro de CB : ");
+					Scanner sc2 = new Scanner(System.in);
+					String numCB = "";
+					numCB = sc2.nextLine();
 					int numClient = Client.creerNonAbonne(Connexion
-							.getConnexion());
-					
-					//END TODO
+							.getConnexion(), numCB);
+					System.out.println("Num client et num nonabo : "+numClient);
 					int nbResa = Reservation.getNbResaAjd(
 							Connexion.getConnexion(), numStation);
 					int nbVeloDispo = Station.getNbVeloDispo(
@@ -145,7 +147,7 @@ public class MenuClient {
 					int numVelo = Station.getVelo(Connexion.getConnexion(),
 							numStation, nbVeloDispo, nbResa);
 					if (numVelo != 0) {
-						Location.louer(Connexion.getConnexion(), numClient,
+						Location.louerNonAbo(Connexion.getConnexion(), numClient,
 								numVelo, numStation);
 					}
 				} catch (SQLException e) {
@@ -206,6 +208,10 @@ public class MenuClient {
 		Calendar cal = java.util.Calendar.getInstance();
 		java.util.Date utilDate = cal.getTime();
 		Date dateAbonnement = new Date(utilDate.getTime());
+		
+		//TODO : GET CB
+		
+		Client.creerAbonnement(Connexion.getConnexion(),dateAbonnement);
 
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(dateAbonnement);

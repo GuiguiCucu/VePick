@@ -87,6 +87,8 @@ public class Station {
 		if (rsVelo.next()) {
 			nbVelo = rsVelo.getInt("nbVelo");
 		}
+		stVelo.close();
+		rsVelo.close();
 		return nbVelo;
 
 	}
@@ -104,6 +106,8 @@ public class Station {
 				System.out.println(rsVeloUnique.getInt("numVelo"));
 				numVelo = rsVeloUnique.getInt("numVelo");
 			}
+			stVeloUnique.close();
+			rsVeloUnique.close();
 		}
 		return numVelo;
 
