@@ -2,6 +2,7 @@ package Interfaces.Client;
 
 import java.sql.Date;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Scanner;
@@ -31,7 +32,8 @@ public class MenuClient {
 		System.out.println("2 - Consulter les bornes V-, V+");
 		System.out.println("3 - Emprunter un velo");
 		System.out.println("4 - Rendre un velo");
-		System.out.println("5 - Quitter");
+		System.out.println("5 - Réserver");
+		System.out.println("6 - Quitter");
 	}
 
 	private void analyseChoix() {
@@ -51,6 +53,9 @@ public class MenuClient {
 			rendreVelo();
 			break;
 		case 5:
+			reserverVelo();
+			break;
+		case 6:
 			Connexion.close();
 			System.out.println("Au revoir");
 			System.exit(0);
@@ -61,9 +66,111 @@ public class MenuClient {
 
 	}
 
+	private void reserverVelo() {
+		System.out.println("\n--------------------------------");
+		System.out.println("---Client - Réserver vélo---");
+		System.out.println("--------------------------------\n");
+
+		Scanner sc = new Scanner(System.in);
+		boolean connexion = false;
+		while (!connexion) {
+			System.out.println("Veuillez saisir votre n°client: ");
+			int numCLient = sc.nextInt();
+			System.out.println("Veuillez saisir votre code secret: ");
+			int codeSecretClient = sc.nextInt();
+			try {
+				connexion = Client.identifierClient(Connexion.getConnexion(),
+						numCLient, codeSecretClient);
+				if (connexion) {
+
+					System.out
+							.println("Saisissez le type de réservation à effectuer : ");
+					System.out.println("1 -- Une journée");
+					System.out
+							.println("2 -- Une journée répétée sur une période");
+					System.out.println("3 -- Tous les jours d'une période");
+
+					int choix = sc.nextInt();
+					switch (choix) {
+					case 1:
+						System.out
+								.println("Veuillez saisir le numéro de la station ou vous êtes : ");
+						int numStation = sc.nextInt();
+
+						String dateReservationUnique = "";
+						while (!dateReservationUnique
+								.matches("([0-9]{2})-([0-9]{2})-([0-9]{4})")) {
+							System.out
+									.println("Veuillez saisir le jour à réserver (jj-mm-yyyy) :");
+							dateReservationUnique = sc.nextLine();
+						}
+
+						// date du jour réservé
+						SimpleDateFormat formatter = new SimpleDateFormat(
+								"dd-MM-yyyy");
+						java.util.Date dateReservationUtil = null;
+						try {
+							dateReservationUtil = formatter
+									.parse(dateReservationUnique);
+						} catch (ParseException e) {
+							e.printStackTrace();
+						}
+						Calendar cdr = Calendar.getInstance();
+						cdr.setTime(dateReservationUtil);
+						cdr.set(Calendar.HOUR_OF_DAY, 0);
+						cdr.set(Calendar.MINUTE, 0);
+						cdr.set(Calendar.SECOND, 0);
+						cdr.set(Calendar.MILLISECOND, 0);
+						java.sql.Date dateReservation = new Date(
+								dateReservationUtil.getTime());
+
+						// dateCourante
+						java.util.Calendar cal = java.util.Calendar
+								.getInstance();
+						cal.set(Calendar.HOUR_OF_DAY, 0);
+						cal.set(Calendar.MINUTE, 0);
+						cal.set(Calendar.SECOND, 0);
+						cal.set(Calendar.MILLISECOND, 0);
+						java.util.Date utilDate = cal.getTime();
+						java.sql.Date now = new Date(utilDate.getTime());
+
+						SimpleDateFormat sdf = new SimpleDateFormat(
+								"dd-MMM-yyyy");
+						String dateResa = sdf.format(now);
+						if (dateReservation.after(now)) {
+							Reservation.reserverUneJournee(
+									Connexion.getConnexion(), numStation,
+									numCLient, dateReservationUnique,
+									"En attente");
+						} else if (dateReservation.equals(now)) {
+							Reservation.reserverUneJournee(
+									Connexion.getConnexion(), numStation,
+									numCLient, dateReservationUnique,
+									"En cours");
+						} else {
+							System.out
+									.println("La date de réservation est antérieure à aujourd'hui.");
+						}
+						break;
+					case 2:
+						break;
+					case 3:
+						break;
+					default:
+						reserverVelo();
+						break;
+					}
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+
+	}
+
 	private void rendreVelo() {
 		System.out.println("\n--------------------------------");
-		System.out.println("---Client - Rendre v�lo---");
+		System.out.println("---Client - Rendre vélo---");
 		System.out.println("--------------------------------");
 		System.out.println("TODO");
 
@@ -133,13 +240,14 @@ public class MenuClient {
 				break;
 			case 2:
 				try {
-					System.out.println("Veuillez saisir votre num�ro de CB : ");
+					System.out.println("Veuillez saisir votre num�ro de CB : ");
 					Scanner sc2 = new Scanner(System.in);
 					String numCB = "";
 					numCB = sc2.nextLine();
-					int numClient = Client.creerNonAbonne(Connexion
-							.getConnexion(), numCB);
-					System.out.println("Num client et num nonabo : "+numClient);
+					int numClient = Client.creerNonAbonne(
+							Connexion.getConnexion(), numCB);
+					System.out.println("Num client et num nonabo : "
+							+ numClient);
 					int nbResa = Reservation.getNbResaAjd(
 							Connexion.getConnexion(), numStation);
 					int nbVeloDispo = Station.getNbVeloDispo(
@@ -147,8 +255,8 @@ public class MenuClient {
 					int numVelo = Station.getVelo(Connexion.getConnexion(),
 							numStation, nbVeloDispo, nbResa);
 					if (numVelo != 0) {
-						Location.louerNonAbo(Connexion.getConnexion(), numClient,
-								numVelo, numStation);
+						Location.louerNonAbo(Connexion.getConnexion(),
+								numClient, numVelo, numStation);
 					}
 				} catch (SQLException e) {
 					e.printStackTrace();
@@ -178,6 +286,7 @@ public class MenuClient {
 
 	private void actionAbonnement() {
 		Scanner sc = new Scanner(System.in);
+		Scanner sc2 = new Scanner(System.in);
 		System.out.println("\n--------------------------------");
 		System.out.println("-------Client - Abonnement------");
 		System.out.println("--------------------------------");
@@ -185,12 +294,12 @@ public class MenuClient {
 		String nom = sc.nextLine();
 		System.out.println("Veuillez saisir votre prenom :");
 		String prenom = sc.nextLine();
-		String strdate = "";
+		String dateNaissance = "";
 		do {
 			System.out
 					.println("Veuillez saisir votre date de naissance (jj-mm-yyyy) :");
-			strdate = sc.nextLine();
-		} while (!strdate.matches("([0-9]{2})-([0-9]{2})-([0-9]{4})"));
+			dateNaissance = sc.nextLine();
+		} while (!dateNaissance.matches("([0-9]{2})-([0-9]{2})-([0-9]{4})"));
 
 		String sexe = "";
 		do {
@@ -203,16 +312,23 @@ public class MenuClient {
 		System.out.println("Veuillez saisir votre ville :");
 		String ville = sc.nextLine();
 		System.out.println("Veuillez saisir votre code postal :");
-		String cp = sc.nextLine();
+		int cp = sc.nextInt();
+		System.out.println("Veuillez saisir votre numéro de carte bleue :");
+		String cb = sc2.nextLine();
+		System.out
+				.println("Veuillez saisir votre code secret lié à votre abonnement :");
+		int codeSecret = sc.nextInt();
+
+		try {
+			Client.creerAbonnement(Connexion.getConnexion(), nom, prenom,
+					dateNaissance, sexe, adresse, ville, cp, cb, codeSecret);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 
 		Calendar cal = java.util.Calendar.getInstance();
 		java.util.Date utilDate = cal.getTime();
 		Date dateAbonnement = new Date(utilDate.getTime());
-		
-		//TODO : GET CB
-		
-		Client.creerAbonnement(Connexion.getConnexion(),dateAbonnement);
-
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(dateAbonnement);
 		calendar.add(Calendar.YEAR, 1);

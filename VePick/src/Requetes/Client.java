@@ -49,7 +49,7 @@ public class Client {
 			calendar.setTime(rsClient.getDate("dateAbonnement"));
 			calendar.add(Calendar.YEAR, 1);
 			Date dateFinAbo = new Date(calendar.getTimeInMillis());
-			//test validité abonemment
+			//test validitï¿½ abonemment
 			if (dateFinAbo.after(now)) {
 				abonnementValide = true;
 			}
@@ -60,7 +60,7 @@ public class Client {
 	}
 
 	public static int creerNonAbonne(Connection conn, String numCB) throws SQLException {
-		//Génération automatique d'un id
+		//Gï¿½nï¿½ration automatique d'un id
         int numCLient = 0;
         PreparedStatement stNumClient = conn
 				.prepareStatement("SELECT count(numClient) as nbIdClient FROM Client");
@@ -70,7 +70,7 @@ public class Client {
 			numCLient = rsNumClient.getInt("nbIdClient") +1;
 		}
         
-		//Création du client
+		//CrÃ©ation du client
 		
 		PreparedStatement stClient = conn.prepareStatement("INSERT INTO Client values (?, ?, ?)");
 		int codeSecret = 100 + (int)(Math.random() * ((999 - 100) + 1));
@@ -80,7 +80,7 @@ public class Client {
 		stClient.executeUpdate();
 		
 
-        //Création du non abonné
+        //Crï¿½ation du non abonnï¿½
         PreparedStatement stNonAbo = conn.prepareStatement("INSERT INTO NonAbonne values (?, sysdate)");
         
         stNonAbo.setInt(1, numCLient);
@@ -94,7 +94,49 @@ public class Client {
         return numCLient;
 	}
 	
-	public static void creerAbonnement(Connection connection, Date dateAbonnement){
+	public static void creerAbonnement(Connection conn, String nom,
+			String prenom, String dateNaissance, String sexe, String adresse,
+			String ville, int cp, String cb, int codeSecret) throws SQLException {
+		
+		//Gï¿½nï¿½ration automatique d'un id
+        int numCLient = 0;
+        PreparedStatement stNumClient = conn
+				.prepareStatement("SELECT count(numClient) as nbIdClient FROM Client");
+		ResultSet rsNumClient = stNumClient.executeQuery();
+
+		if (rsNumClient.next()) {
+			numCLient = rsNumClient.getInt("nbIdClient") +1;
+		}
+        
+		//CrÃ©ation du client
+		
+		PreparedStatement stClient = conn.prepareStatement("INSERT INTO Client values (?, ?, ?)");
+		stClient.setInt(1, numCLient);
+		stClient.setInt(2, codeSecret);
+		stClient.setString(3, cb);
+		stClient.executeUpdate();
+		
+
+        //Crï¿½ation de l'abonnÃ©
+        PreparedStatement stAbo = conn.prepareStatement("INSERT INTO Abonne values (?,?,?,TO_DATE(?, 'dd-mm-yyyy'),?, ?, ?, ?,sysdate)");
+        
+        stAbo.setInt(1, numCLient);
+        stAbo.setString(2, nom);
+        stAbo.setString(3, prenom);
+        stAbo.setString(4, dateNaissance);
+        //4 date naissance
+        stAbo.setString(5, sexe);
+        stAbo.setString(6, ville);
+        stAbo.setString(7, adresse);
+        stAbo.setInt(8, cp);
+        
+        stAbo.executeUpdate();
+        
+        stNumClient.close();
+        rsNumClient.close();
+        stClient.close();
+        stAbo.close();
+ 		
 		
 	}
 }
