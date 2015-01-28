@@ -5,7 +5,12 @@ DECLARE
   dateDernierChargement date;
   dateDernierDepot date;
   estLoue int;
+  
+  curDate date;
 BEGIN
+	
+	DBMS_OUTPUT.ENABLE;
+	
   SELECT MAX(dateAction) INTO dateDernierChargement
   FROM ActionVehiculeVelo AVV, ActionVehicule AV
   WHERE AVV.idAction = AV.idAction
@@ -28,13 +33,22 @@ BEGIN
   FROM Location
   WHERE dateFinLocation IS NULL
   AND numVelo = :new.numVelo;
+  		
+  DBMS_OUTPUT.PUT_LINE(estLoue);
   
   IF(estLoue <> 0)
   THEN 
-  UPDATE Location SET dateFinLocation = NOW() WHERE dateFinLocation IS NULL AND numVelo = :new.numVelo;
+  	DBMS_OUTPUT.PUT_LINE('le velo est loue');
+  
+  		UPDATE Location SET dateFinLocation = SYSDATE
+  		WHERE dateFinLocation IS NULL 
+  		AND numVelo = :new.numVelo;
   END IF;
   
- 
+  EXCEPTION
+   When NO_DATA_FOUND then
+   	curDate := SYSDATE; 
+  
 END;
 /
 

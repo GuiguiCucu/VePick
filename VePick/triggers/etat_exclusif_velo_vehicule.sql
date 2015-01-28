@@ -32,10 +32,10 @@ END;
 /*
 ===== TESTS =====
 
--- On sait que vélo X est accroché à une bornette, on tente de charger le vélo, verifier que le vélo est bien decroché de cette bornette
+-- On sait que vélo X est accroché à une bornette, on tente de charger le vélo, verifier que le vélo est b
+(TODO DEMANDER LES CONDITION OU CA PEUT MARCHER)ien decroché de cette bornette
 --TODO
 
---On sait que le Vélo X est en location, on tente de charger un vélo loué, verifier qu'une erreur est retourné 
-(TODO DEMANDER LES CONDITION OU CA PEUT MARCHER)
+--On sait que le Vélo X est en location, on tente de charger un vélo loué, verifier qu'une erreur est retourné (EXTENSION: on peut autorisé le cassi c'est un vélo abandonné)
 --TODO
 */
