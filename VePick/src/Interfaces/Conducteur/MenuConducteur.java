@@ -6,6 +6,7 @@ import java.util.Scanner;
 import Connexion.Connexion;
 import Requetes.TacheRoutine;
 import Requetes.VehiculeRegulation;
+import Requetes.Velo;
 
 public class MenuConducteur {
 	
@@ -35,7 +36,7 @@ public class MenuConducteur {
 		int choix = sc.nextInt();
 		switch (choix) {
 		case 1:
-			System.out.println("TODO déclarer velo endommagé");
+			veloEndommage();
 			break;
 		case 2:
 			consulterRoutine();
@@ -60,6 +61,40 @@ public class MenuConducteur {
 
 	}
 	
+	/**
+	 * permet de changer l'etat d'un vélo OK -> HS
+	 */
+	private void veloEndommage(){
+		System.out.println("\n--------------------------------");
+		System.out.println("-- Conducteur - Velo edommage --");
+		System.out.println("--------------------------------");
+		
+		// affichage de tous les velos
+		System.out.println("Tous les velos enregistrés :");
+		try{
+			Velo.afficherVelos(Connexion.getConnexion());
+		}
+		catch(SQLException e){
+			e.printStackTrace();
+		}
+		
+		// mise a jour de l'etat d'un velo
+		System.out.println("\nSaisissez un numero de velo :");
+		Scanner sc = new Scanner(System.in);
+		int choix = sc.nextInt();
+		
+		try{
+			Velo.declarerEndommage(Connexion.getConnexion(), choix);
+		}
+		catch(SQLException e){
+			e.printStackTrace();
+		}
+
+	}
+	
+	/**
+	 * consulter la routine d'un vehicule
+	 */
 	private void consulterRoutine(){
 		System.out.println("\n--------------------------------");
 		System.out.println("-Conducteur - Consulter routine-");

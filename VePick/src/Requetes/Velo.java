@@ -8,6 +8,24 @@ import java.sql.SQLException;
 public class Velo {
 	
 	/**
+	 * affiche tous les velos
+	 * @param conn
+	 * @throws SQLException
+	 */
+	public static void afficherVelos(Connection conn) throws SQLException{
+		PreparedStatement stVelos = conn.prepareStatement("SELECT * FROM Velo");
+		ResultSet rsVelos = stVelos.executeQuery();
+		while(rsVelos.next()){
+			System.out.println("------");
+			System.out.println("-Velo numero : "+rsVelos.getInt("numVelo"));
+			System.out.println("-Modele : "+rsVelos.getString("modele"));
+			System.out.println("-Mise en service : "+new java.util.Date(rsVelos.getTimestamp("dateMiseEnService").getTime()));
+			System.out.println("-Etat : "+rsVelos.getString("etat"));
+			System.out.println("------");
+		}
+	}
+	
+	/**
 	 * affichage des velos d'une station
 	 * @param conn
 	 * @param numStation
@@ -35,6 +53,12 @@ public class Velo {
 		System.out.println("\n-----------------------------------");
 	}
 	
+	/**
+	 * affiche le nombre de velos dans une station
+	 * @param conn
+	 * @param numStation
+	 * @throws SQLException
+	 */
 	public static void afficherNombreVelosStation(Connection conn, int numStation) throws SQLException{
 		// on recupere les bornettes de la station qui ont un velo
 		PreparedStatement stNbVelos = conn.prepareStatement("SELECT numVelo FROM Bornette WHERE numStation = ? AND numVelo IS NOT NULL");
@@ -47,5 +71,20 @@ public class Velo {
 		}
 		System.out.println("La station "+numStation+" contient "+i+" velos.");
 		System.out.println("-----------------------------------");
+	}
+	
+	/**
+	 * etat d'un velo OK -> HS
+	 * @param conn
+	 * @param numVelo
+	 * @throws SQLException
+	 */
+	public static void declarerEndommage(Connection conn, int numVelo) throws SQLException{
+		PreparedStatement stVelo = conn.prepareStatement("UPDATE Velo SET etat='HS' WHERE numVelo = ?");
+		stVelo.setInt(1, numVelo);
+		ResultSet rsVelo = stVelo.executeQuery();
+		if(rsVelo.next()){
+			System.out.println("L'état du velo a été mis à jour de OK à HS.");
+		}
 	}
 }
