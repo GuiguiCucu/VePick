@@ -5,6 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import javax.naming.spi.DirStateFactory.Result;
+
 public class Station {
 	public static void afficherStations(Connection conn) throws SQLException {
 		PreparedStatement stStation = conn
@@ -141,11 +143,42 @@ public class Station {
 		return typeStation;
 	}
 
-	public static void majVeloBornette(Connection conn, int numVelo) throws SQLException {
+	public static void majVeloBornette(Connection conn, int numVelo)
+			throws SQLException {
 		PreparedStatement stBornette = conn
 				.prepareStatement("UPDATE Bornette SET numVelo = NULL WHERE numVelo = ? ");
 		stBornette.setInt(1, numVelo);
 		stBornette.executeUpdate();
 		stBornette.close();
+	}
+
+	/**
+	 * Attache un vélo à une bornette
+	 * 
+	 * @param conn
+	 * @param numVelo
+	 * @throws SQLException
+	 */
+	public static void rattacherVeloBornette(Connection conn, int numVelo,
+			int numStation) throws SQLException {
+		// récup d'une bornette inoccupée
+		PreparedStatement stBorne = conn
+				.prepareStatement("SELECT numBornette FROM Bornette WHERE numVelo IS NULL AND numStation = ?");
+		stBorne.setInt(1, numStation);
+		ResultSet rsBorne = stBorne.executeQuery();
+		if (rsBorne.next()) {
+			int numBornette = rsBorne.getInt("numBornette");
+			System.out.println("---> Rattachement du vélo " + numVelo+ " a la borne " + numBornette);
+			PreparedStatement stBornette = conn.prepareStatement("UPDATE Bornette SET numVelo = ? WHERE numBornette = ? ");
+			stBornette.setInt(1, numVelo);
+			stBornette.setInt(2, numBornette);
+			stBornette.executeUpdate();
+			stBornette.close();
+
+		} else {
+			System.out.println("DEPOT IMPOSSIBLE - Aucune borne n'est libre ou la station n'existe pas.");
+		}
+		stBorne.close();
+		rsBorne.close();
 	}
 }

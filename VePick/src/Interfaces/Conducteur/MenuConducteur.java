@@ -5,6 +5,7 @@ import java.util.Scanner;
 
 import Connexion.Connexion;
 import Requetes.ActionVehicule;
+import Requetes.Station;
 import Requetes.TacheRoutine;
 import Requetes.VehiculeRegulation;
 import Requetes.Velo;
@@ -46,7 +47,8 @@ public class MenuConducteur {
 			System.out.println("TODO valid routine");
 			break;
 		case 4:
-			System.out.println("TODO déplacer vélo");
+			deplacerVeloChoix();
+			deplacerVelo();
 			break;
 		case 5:
 			reparerVelo();
@@ -135,21 +137,77 @@ public class MenuConducteur {
 			e.printStackTrace();
 		}
 
-		// selection du velo a reparer
-		System.out.println("\nSaisissez un numero de velo :");
+		// selection du vehicule, et du velo a reparer
+		System.out.println("\nSaisissez un numero de vehicule :");
 		Scanner sc = new Scanner(System.in);
-		int choix = sc.nextInt();
-		
+		int numVehicule = sc.nextInt();
+		System.out.println("\nSaisissez un numero de velo :");
+		int numVelo = sc.nextInt();
 		// MAJ de l'etat du velo
 		try {
-			Velo.reparerVelo(Connexion.getConnexion(), choix);
+			Velo.reparerVelo(Connexion.getConnexion(), numVelo);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+
 		// enregistrerment dans ActionVehiculeVelo
 		try {
-			ActionVehicule.actionVelo(Connexion.getConnexion(), "reparation velo");
+			ActionVehicule.actionVelo(Connexion.getConnexion(), "reparation velo", numVehicule, numVelo);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * présente les choix de deplacement d'un velo
+	 */
+	private void deplacerVeloChoix() {
+		System.out.println("\n--------------------------------");
+		System.out.println("-Conducteur - Déplacer un velo--");
+		System.out.println("--------------------------------\n\r");
+		System.out.println("Choisissez une action : ");
+		System.out.println("1 - Déposer un vélo");
+		System.out.println("2 - Charger un vélo dans le vehicule");
+	}
+
+	/**
+	 * analise du choix de deplacerVeloChoix
+	 */
+	private void deplacerVelo() {
+		Scanner sc = new Scanner(System.in);
+		int choix = sc.nextInt();
+		switch (choix) {
+		case 1:
+			deposerVelo();
+			break;
+		case 2:
+			// TODO chargerVelo();
+			break;
+		default:
+			break;
+		}
+	}
+
+	private void deposerVelo() {
+		// selection du vehicule, et du velo a reparer
+		System.out.println("\nSaisissez le numero de votre vehicule :");
+		Scanner sc = new Scanner(System.in);
+		int numVehicule = sc.nextInt();
+		System.out.println("\nSaisissez le numero du velo à déposer:");
+		int numVelo = sc.nextInt();
+		System.out.println("\nSaisissez le numero de station dans laquelle vous voulez deposer le vélo :");
+		int numStation = sc.nextInt();
+		
+		// rattacher le velo à la borne
+		try {
+			Station.rattacherVeloBornette(Connexion.getConnexion(), numVelo, numStation);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		// enregistrement de l'action
+		try {
+			ActionVehicule.actionVelo(Connexion.getConnexion(), "depot velo", numVehicule, numVelo);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

@@ -23,6 +23,8 @@ public class Velo {
 			System.out.println("-Etat : "+rsVelos.getString("etat"));
 			System.out.println("------");
 		}
+		stVelos.close();
+		rsVelos.close();
 	}
 	
 	/**
@@ -41,6 +43,8 @@ public class Velo {
 			System.out.println("-Etat : "+rsVelos.getString("etat"));
 			System.out.println("------");
 		}
+		stVelos.close();
+		rsVelos.close();
 	}
 	
 	/**
@@ -67,8 +71,12 @@ public class Velo {
 				System.out.println("- Etat : "+rsVelo.getString("etat"));
 				System.out.println("------");
 			}
+			stVelo.close();
+			rsVelo.close();
 		}
 		System.out.println("\n-----------------------------------");
+		stBornette.close();
+		rsBornette.close();
 	}
 	
 	/**
@@ -89,6 +97,8 @@ public class Velo {
 		}
 		System.out.println("La station "+numStation+" contient "+i+" velos.");
 		System.out.println("-----------------------------------");
+		stNbVelos.close();
+		rsNbVelos.close();
 	}
 	
 	/**
@@ -104,6 +114,8 @@ public class Velo {
 		if(rsVelo.next()){
 			System.out.println("L'état du velo a été mis à jour de OK à HS.");
 		}
+		stVelo.close();
+		rsVelo.close();
 	}
 	
 	/**
@@ -119,5 +131,7 @@ public class Velo {
 		if(rsVelo.next()){
 			System.out.println("L'état du velo a été mis à jour de HS à OK.");
 		}
+		stVelo.close();
+		rsVelo.close();
 	}
 }

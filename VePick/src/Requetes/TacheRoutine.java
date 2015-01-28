@@ -27,7 +27,12 @@ public class TacheRoutine {
 				System.out.println("Rang "+rsRoutine.getInt("rang"));
 				System.out.println("Etat : "+rsRoutine.getString("etat"));
 			}
+			
+			stTache.close();
+			rsTache.close();
 		}
 		System.out.println("\n-----------------------------------");
+		stRoutine.close();
+		rsRoutine.close();
 	}
 }
