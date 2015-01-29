@@ -28,13 +28,13 @@ END;
 -- on essaie de rendre un vélo sur une borne occupée 
 
 UPDATE Bornette
-SET numVelo = 1
-WHERE numBornette = 9;
+SET numVelo = 16
+WHERE numBornette = 8;
 
 -- sur une borne HS
 
 UPDATE Bornette
-SET numVelo = 1
+SET numVelo = 16
 WHERE numBornette = 10;
 
 */
