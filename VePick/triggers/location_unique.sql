@@ -6,7 +6,7 @@ DECLARE
 BEGIN
   SELECT COUNT(numClient) INTO loc
   FROM Location
-  WHERE numClient =:new.numClient;
+  WHERE numClient =:new.numClient AND dateFinLocation is NULL;
     
   IF (loc <> 0)
   THEN raise_application_error(-20000 , 'Impossible de louer deux vlos en mme temps!');
