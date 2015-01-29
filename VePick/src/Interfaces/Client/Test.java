@@ -10,16 +10,16 @@ public class Test {
 
 	public static void main(String[] args) {
 
-		// System.out.println("Votre location a été enregistré. Vous pouvez retirer le vélo n°"+2);
-		// System.out.println("La station dans laquelle vous empruntez actuellement est de type "+"vnul");
-		// java.util.Calendar cal = java.util.Calendar.getInstance();
-		// java.util.Date utilDate = cal.getTime();
-		// cal.setTime(utilDate);
-		// cal.add(Calendar.HOUR,12);
-		// Date dateFinLoc = new Date(cal.getTimeInMillis());
-		// SimpleDateFormat sdf = new SimpleDateFormat("HH:mm dd-MM-yyyy");
-		// System.out.println("La location doit-être rendu avant "+
-		// sdf.format(dateFinLoc) +" au plus tard");
+		 System.out.println("Votre location a été enregistré. Vous pouvez retirer le vélo n°"+2);
+		 System.out.println("La station dans laquelle vous empruntez actuellement est de type "+"vnul");
+		 java.util.Calendar cal = java.util.Calendar.getInstance();
+		 java.util.Date utilDate = cal.getTime();
+		 cal.setTime(utilDate);
+		 cal.add(Calendar.HOUR,12);
+		 Date dateFinLoc = new Date(cal.getTimeInMillis());
+		 SimpleDateFormat sdf = new SimpleDateFormat("HH:mm dd-MM-yyyy");
+		 System.out.println("La location doit-être rendu avant "+
+		 sdf.format(dateFinLoc) +" au plus tard");
 
 		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm dd-MM-yyyy");
 		SimpleDateFormat sdf1 = new SimpleDateFormat("dd-MMM-yy");

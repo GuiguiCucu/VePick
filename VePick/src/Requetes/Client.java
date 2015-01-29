@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Scanner;
 
 public class Client {
 
@@ -129,7 +130,6 @@ public class Client {
 		stAbo.setString(2, nom);
 		stAbo.setString(3, prenom);
 		stAbo.setString(4, dateNaissance);
-		// 4 date naissance
 		stAbo.setString(5, sexe);
 		stAbo.setString(6, ville);
 		stAbo.setString(7, adresse);
@@ -170,7 +170,7 @@ public class Client {
 		if (rsClient.next()) {
 			numVeloARendre = rsClient.getInt("numVelo");
 		} else {
-			System.out.println("Vous n'avez pas de location non finalisée!");
+			System.out.println("Vous n'avez pas de location non finalisï¿½e!");
 		}
 		stClient.close();
 		rsClient.close();
@@ -197,9 +197,9 @@ public class Client {
 
 			int retard = hoursDifference(now, dateLoc) - 12;
 			if (retard >= 12) {
-				System.out.println("Vous avez rendu votre vélo avec " + retard
+				System.out.println("Vous avez rendu votre vï¿½lo avec " + retard
 						+ " heures de retards");
-				System.out.println("Vous écoppez d'une amende de 10€");
+				System.out.println("Vous ï¿½coppez d'une amende de 10ï¿½");
 				Client.genererAmende(conn, dateLoc, numClient, numVeloRendu);
 			}
 		}
@@ -221,7 +221,8 @@ public class Client {
 			stAmende.setInt(2, numVeloRendu);
 			stAmende.setInt(3, numClient);
 			stAmende.setDate(4, dateLoc);
-			//ORA-02291: violation de contrainte d'intégrité (CUTRONEG.AMENDE_FK) - clé parent introuvable :TODO
+			// ORA-02291: violation de contrainte d'intï¿½gritï¿½
+			// (CUTRONEG.AMENDE_FK) - clï¿½ parent introuvable :TODO
 			stAmende.executeUpdate();
 			stAmende.close();
 		}
@@ -234,8 +235,9 @@ public class Client {
 		return (int) (date1.getTime() - date2.getTime()) / MILLI_TO_HOUR;
 	}
 
-	public static void checkRemise(Connection conn, String typeRetourStation,
-			int numClient, int numVeloRendu) throws SQLException {
+	public static void checkNouvelleRemise(Connection conn,
+			String typeRetourStation, int numClient, int numVeloRendu)
+			throws SQLException {
 		PreparedStatement stClient = conn
 				.prepareStatement("SELECT TypeStationDepart FROM Location WHERE numClient = ? AND dateFinLocation IS NULL AND numVelo = ?");
 		stClient.setInt(1, numClient);
@@ -302,6 +304,71 @@ public class Client {
 		stClient.close();
 		rsClient.close();
 		return isAbo;
+	}
+
+	public static void decompterRemise(Connection conn, int numClient)
+			throws SQLException {
+		if (Client.isAbonne(conn, numClient)) {
+			// Remise en cour?
+			PreparedStatement stRemise = conn
+					.prepareStatement("SELECT COUNT(*) AS numRemiseAbonne, numRemise, pourCentRemise FROM RemiseAbonne WHERE numClient = ?");
+			stRemise.setInt(1, numClient);
+			ResultSet rsRemise = stRemise.executeQuery();
+			if (rsRemise.next()) {
+				int numRemiseAbonne = rsRemise.getInt("numRemiseAbonne");
+				if (numRemiseAbonne == 1) {
+					System.out
+							.println("Vous bÃ©nÃ©ficiez d'une remise dÃ»e Ã  une ancienne location");
+					System.out.println("Vous avez droit Ã  "
+							+ rsRemise.getInt("pourCentRemise")
+							+ "% de remise sur votre location actuelle");
+					// Suppression remise
+					PreparedStatement stSuppressionRemiseAbo = conn
+							.prepareStatement("DELETE FROM RemiseAbonne WHERE numRemise = ?");
+					stSuppressionRemiseAbo.setInt(1,
+							rsRemise.getInt("numRemise"));
+					stSuppressionRemiseAbo.executeUpdate();
+					stSuppressionRemiseAbo.close();
+				} else {
+					System.out
+							.println("Vous n'avez pas de remise en cours cher abonnÃ©");
+				}
+			}
+			stRemise.close();
+			rsRemise.close();
+		} else {
+			Scanner sc = new Scanner(System.in);
+			System.out.println("Si vous avez un code de remise, saisissez-le.");
+			int codeRemiseNonAbo = sc.nextInt();
+			PreparedStatement stRemiseNonAbo = conn
+					.prepareStatement("SELECT COUNT(*) AS numRemiseNonAbonne, numRemise, pourCentRemise, datePeremption FROM RemiseNonAbonne WHERE numClient = ? AND codeRemise = ?");
+			stRemiseNonAbo.setInt(1, numClient);
+			stRemiseNonAbo.setInt(2, codeRemiseNonAbo);
+			ResultSet rsRemiseNonAbo = stRemiseNonAbo.executeQuery();
+			if (rsRemiseNonAbo.next()) {
+				int numRemiseNonAbonne = rsRemiseNonAbo
+						.getInt("numRemiseNonAbonne");
+				if (numRemiseNonAbonne == 1) {
+					System.out.println("Vous bÃ©nÃ©ficiez d'une remise dÃ»e Ã  une ancienne location");
+					System.out.println("Vous avez droit Ã  "
+							+ rsRemiseNonAbo.getInt("pourCentRemise")
+							+ "% de remise sur votre location actuelle");
+					PreparedStatement stSuppressionRemiseNonAbo = conn
+							.prepareStatement("DELETE FROM RemiseNonAbonne WHERE numRemise = ?");
+					stSuppressionRemiseNonAbo.setInt(1,
+							rsRemiseNonAbo.getInt("numRemise"));
+					stSuppressionRemiseNonAbo.executeUpdate();
+					stSuppressionRemiseNonAbo.close();
+				} else {
+					System.out
+							.println("Aucune remise associÃ©e Ã  votre compte avec ce code");
+				}
+			}
+			stRemiseNonAbo.close();
+			rsRemiseNonAbo.close();
+
+		}
+
 	}
 
 }

@@ -58,7 +58,7 @@ public class Station {
 	}
 
 	/**
-	 * Affiche les bornes sans vélo à la station et en état OK
+	 * Affiche les bornes sans vï¿½lo ï¿½ la station et en ï¿½tat OK
 	 * @param conn
 	 * @param numStation
 	 * @throws SQLException
@@ -75,10 +75,10 @@ public class Station {
 						.prepareStatement("SELECT numBornette FROM Bornette WHERE numStation = ? and numVelo IS NULL");
 				stBornette.setInt(1, numStation);
 				ResultSet rsBornette = stBornette.executeQuery();
-				System.out.println("Bornette libre dans la station n°"
+				System.out.println("Bornette libre dans la station nï¿½"
 						+ numStation+" : ");
 				while (rsBornette.next()) {
-					System.out.println("Bornette n°"
+					System.out.println("Bornette nï¿½"
 							+ rsBornette.getInt("numBornette"));
 				}
 				stBornette.close();
@@ -93,7 +93,7 @@ public class Station {
 	}
 
 	/**
-	 * Retourne le nombre  de vélos libres OK attachés à une bornette OK
+	 * Retourne le nombre  de vï¿½los libres OK attachï¿½s ï¿½ une bornette OK
 	 * @param conn
 	 * @param numStation
 	 * @param nbResa
@@ -118,7 +118,7 @@ public class Station {
 	}
 
 	/**
-	 * Retourne un vélo libre OK attaché à une bornette OK
+	 * Retourne un vï¿½lo libre OK attachï¿½ ï¿½ une bornette OK
 	 * @param conn
 	 * @param numStation
 	 * @param nbVeloDispo
@@ -217,7 +217,7 @@ public class Station {
 	}
 
 	/**
-	 * Verifie si un numero de bornette spécifié correspond a une bornette libre
+	 * Verifie si un numero de bornette spï¿½cifiï¿½ correspond a une bornette libre
 	 * @param conn
 	 * @param numBornette
 	 * @param numStation
@@ -235,11 +235,20 @@ public class Station {
 			if(rsBorne.getInt("nbResult")!=0){
 				estLibre = true;
 			}else{
-				System.out.println("Erreur. Veuillez saisir un numéro de borne disponible");
+				System.out.println("Erreur. Veuillez saisir un numï¿½ro de borne disponible");
 			}
 		}
 		stBorne.close();
 		rsBorne.close();
 		return estLibre;
+	}
+
+	public static void attacherVeloABornette(Connection conn,
+			int numBornette, int numVeloRendu) throws SQLException {
+		PreparedStatement stBornette = conn.prepareStatement("UPDATE Bornette SET numVelo = ? WHERE numBornette = ?");
+		stBornette.setInt(1, numVeloRendu);
+		stBornette.setInt(2, numBornette);
+		stBornette.executeUpdate();
+		stBornette.close();
 	}
 }
