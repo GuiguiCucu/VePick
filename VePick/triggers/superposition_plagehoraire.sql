@@ -11,7 +11,7 @@ FOR LIGNE IN (SELECT P.dateDebut, P.dateFin, P.numStation
 	WHERE numStation = LIGNE.numStation
 	AND (dateDebut > LIGNE.dateDebut AND dateDebut < LIGNE.dateFin) OR (dateFin > LIGNE.dateDebut AND dateFin < LIGNE.dateFin)
 	AND numStation IN (SELECT numStation
-						FROM PlageHoraire);
+						FROM PlageHoraire WHERE numStation=LIGNE.numStation);
 	if(nb > 0) then
 		Raise_application_error(-20013,'Deux plages horaires ne peuvent pas se chevaucher');
 	end if;
@@ -34,7 +34,10 @@ date de fin dans une plage:
 INSERT INTO PlageHoraire values (6, 1, 3, TO_DATE('2015/01/02 12:00:00', 'yyyy/mm/dd hh24:mi:ss'), TO_DATE('2015/01/05 14:30:00', 'yyyy/mm/dd hh24:mi:ss'));
 date de début et de fin dans une plage:
 INSERT INTO PlageHoraire values (7, 1, 3, TO_DATE('2015/01/05 12:40:00', 'yyyy/mm/dd hh24:mi:ss'), TO_DATE('2015/01/05 14:30:00', 'yyyy/mm/dd hh24:mi:ss'));
- Pas de chevauchement:
+Pas de chevauchement:
 INSERT INTO PlageHoraire values (8, 1, 3, TO_DATE('2015/01/22 15:40:00', 'yyyy/mm/dd hh24:mi:ss'), TO_DATE('2015/01/29 19:20:00', 'yyyy/mm/dd hh24:mi:ss'));
+Pas de conflit avec d'autre stations:
+INSERT INTO PlageHoraire values (6, 2, 3, TO_DATE('2015/01/02 12:00:00', 'yyyy/mm/dd hh24:mi:ss'), TO_DATE('2015/01/05 14:30:00', 'yyyy/mm/dd hh24:mi:ss'));
+
 
 */

@@ -26,7 +26,10 @@ END;
 /
 
 /*
-	On insert des 
+
+	SELECT * FROM ActionVehiculeVelo;	
+	
+On insert des 
 INSERT INTO ActionVehiculeVelo values (2, 4, 16, 'Chargement velo');
 INSERT INTO ActionVehiculeVelo values (2, 4, 15, 'Depot velo');
 INSERT INTO ActionVehiculeVelo values (2, 4, 14, 'Chargement velo');
