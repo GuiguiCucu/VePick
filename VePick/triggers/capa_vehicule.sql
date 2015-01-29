@@ -29,7 +29,7 @@ END;
 
 	SELECT * FROM ActionVehiculeVelo;	
 	
-On insert des 
+On insert des velos, pour tester
 INSERT INTO ActionVehiculeVelo values (2, 4, 16, 'Chargement velo');
 INSERT INTO ActionVehiculeVelo values (4, 4, 14, 'Chargement velo');
 INSERT INTO ActionVehiculeVelo values (5, 4, 13, 'Chargement velo');

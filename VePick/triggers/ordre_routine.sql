@@ -23,7 +23,7 @@ FOR LIGNE IN (SELECT DISTINCT T.numVehicule, T.numTache, MIN(rang) AS minimum
 						WHERE etat <> 'En attente');
 	--dbms_output.put_line('idRoutines '|| LIGNE.idRoutines || 'avec' || nb);	
 	if(nb > 0) then
-		Raise_application_error(-20013,'Vous devez valider toutes les taches précédentes');
+		Raise_application_error(-20013,'Vous devez valider toutes les taches precedentes');
 	end if;
 END LOOP ;
 	
@@ -51,5 +51,10 @@ Valider une tache qui n'est pas la prochaine:
 UPDATE TacheRoutine 
 SET etat='Echec'
 WHERE numVehicule=1 AND numTache=1 AND rang=3;
+
+Valider la prochaine:
+UPDATE TacheRoutine 
+SET etat='Echec'
+WHERE numVehicule=1 AND numTache=1 AND rang=2;
 
 */
