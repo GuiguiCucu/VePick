@@ -183,7 +183,7 @@ public class MenuClient {
 
 		SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy");
 		String dateAjd = sdf.format(now);
-		
+
 		System.out.println("END DATE");
 
 		if (dateReservationFinPeriode.after(dateReservationDebutPeriode)) {
@@ -198,7 +198,8 @@ public class MenuClient {
 						Reservation.reserverJourPeriode(
 								Connexion.getConnexion(), numCLient,
 								numStation, dateReservationDebutPeriodeUtil,
-								dateDebutPeriode, dateFinPeriode, etat, delaiRepet);
+								dateDebutPeriode, dateFinPeriode, etat,
+								delaiRepet);
 					} catch (SQLException e) {
 						e.printStackTrace();
 					}
@@ -369,19 +370,60 @@ public class MenuClient {
 
 	private void rendreVelo() {
 		System.out.println("\n--------------------------------");
-		System.out.println("---Client - Rendre vÃ©lo---");
+		System.out.println("---Client - Rendre vélo---");
 		System.out.println("--------------------------------");
-		System.out.println("TODO");
 
-		/*
-		 * Afficher borne libre station Saisir code client Yolo
-		 */
+		// Afficher borne libre station Saisir code client Yolo
+
 		System.out
-				.println("(Simulation)Veuillez saisir le numÃ©ro de la station ou vous Ãªtes : ");
+				.println("[Simulation]Veuillez saisir le numéro de la station ou vous êtes : ");
 		Scanner sc = new Scanner(System.in);
 		int numStation = sc.nextInt();
 		try {
 			Station.afficherBornesLibres(Connexion.getConnexion(), numStation);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		boolean choixBornetteOK = false;
+		while (!choixBornetteOK) {
+			System.out
+					.println("Veuillez choisir une borne parmi celles listées ci-dessus : ");
+			int numBornette = sc.nextInt();
+			try {
+				choixBornetteOK = Station.checkDisponibiliteBornette(
+						Connexion.getConnexion(), numBornette, numStation);
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+		}
+
+		System.out
+				.println("[SIMULATION RFID]Saisir le numéro du vélo à rendre : ");
+		int numVeloRendu = sc.nextInt();
+		System.out.println("Saisissez votre code secret : ");
+		int codeSecret = sc.nextInt();
+		try {
+			int numClient = Client.getClientFromCode(Connexion.getConnexion(),
+					codeSecret);
+			if (numClient != 0) {
+				int numVeloARendre = Client.getVeloLocation(
+						Connexion.getConnexion(), numClient);
+				if (numVeloRendu == numVeloARendre && numVeloARendre != 0) {
+
+					Client.checkAmende(Connexion.getConnexion(), numClient,
+							numVeloRendu);
+					String typeRetourStation = Station.getTypeStation(
+							Connexion.getConnexion(), numStation);
+					Client.checkRemise(Connexion.getConnexion(),
+							typeRetourStation, numClient, numVeloRendu);
+					// 2 - Décompter remise
+					// TODO
+					// maj fin loc
+					// TODO
+					// maj numVelo de Bornette
+					// TODO
+				}
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -417,8 +459,7 @@ public class MenuClient {
 							int nbResa = Reservation.getNbResaAjd(
 									Connexion.getConnexion(), numStation);
 							int nbVeloDispo = Station.getNbVeloDispo(
-									Connexion.getConnexion(), numStation,
-									nbResa);
+									Connexion.getConnexion(), numStation);
 							int numVelo = Station.getVelo(
 									Connexion.getConnexion(), numStation,
 									nbVeloDispo, nbResa);
@@ -439,7 +480,8 @@ public class MenuClient {
 				break;
 			case 2:
 				try {
-					System.out.println("Veuillez saisir votre numï¿½ro de CB : ");
+					System.out
+							.println("Veuillez saisir votre numï¿½ro de CB : ");
 					Scanner sc2 = new Scanner(System.in);
 					String numCB = "";
 					numCB = sc2.nextLine();
@@ -450,7 +492,7 @@ public class MenuClient {
 					int nbResa = Reservation.getNbResaAjd(
 							Connexion.getConnexion(), numStation);
 					int nbVeloDispo = Station.getNbVeloDispo(
-							Connexion.getConnexion(), numStation, nbResa);
+							Connexion.getConnexion(), numStation);
 					int numVelo = Station.getVelo(Connexion.getConnexion(),
 							numStation, nbVeloDispo, nbResa);
 					if (numVelo != 0) {

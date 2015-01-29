@@ -17,8 +17,12 @@ public class Station {
 			PreparedStatement stType = conn
 					.prepareStatement("SELECT idType, libelle FROM TypeStation WHERE idType IN  (SELECT idType FROM PlageHoraire WHERE numStation = ? AND trunc(dateDebut) - trunc(sysdate) = 0  )");
 			stType.setInt(1, rsStation.getInt("numStation"));
-			// SELECT * FROM plagehoraire WHERE trunc(dateDebut) - trunc(sysdate) = 0;
-			//INSERT INTO PlageHoraire values (4, 1, 3, TO_DATE('2015/01/28 12:30:00', 'yyyy/mm/dd hh24:mi:ss'), TO_DATE('2015/01/28 15:30:00', 'yyyy/mm/dd hh24:mi:ss'));
+			//DONE
+			// SELECT * FROM plagehoraire WHERE trunc(dateDebut) -
+			// trunc(sysdate) = 0;
+			// INSERT INTO PlageHoraire values (4, 1, 3, TO_DATE('2015/01/28
+			// 12:30:00', 'yyyy/mm/dd hh24:mi:ss'), TO_DATE('2015/01/28
+			// 15:30:00', 'yyyy/mm/dd hh24:mi:ss'));
 			ResultSet rsType = stType.executeQuery();
 			if (rsType.next()) {
 				PreparedStatement stPlageHoraire = conn
@@ -53,30 +57,50 @@ public class Station {
 		rsStation.close();
 	}
 
-	/*
-	 * NOT USE (FUTUR)
+	/**
+	 * Affiche les bornes sans vélo à la station et en état OK
+	 * @param conn
+	 * @param numStation
+	 * @throws SQLException
 	 */
 	public static void afficherBornesLibres(Connection conn, int numStation)
 			throws SQLException {
-		PreparedStatement stBornette = conn
-				.prepareStatement("SELECT numBornette FROM Bornette WHERE numStation = ? and numVelo IS NULL");
-		stBornette.setInt(1, numStation);
-		ResultSet rsBornette = stBornette.executeQuery();
-		// int rowcount = 0;
-		// if(rowcount ==0){
-		// System.out.println("La station renseignÃ©e n'existe pas");
-		// }else{
-		while (rsBornette.next()) {
-			System.out.println(rsBornette.getInt("numBornette"));
+		PreparedStatement stBornetteLibre = conn
+				.prepareStatement("SELECT count(numBornette) AS nbBornetteLibre FROM Bornette WHERE numStation = ? and numVelo IS NULL");
+		stBornetteLibre.setInt(1, numStation);
+		ResultSet rsBornetteLibre = stBornetteLibre.executeQuery();
+		if (rsBornetteLibre.next()) {
+			if (rsBornetteLibre.getInt("nbBornetteLibre") != 0) {
+				PreparedStatement stBornette = conn
+						.prepareStatement("SELECT numBornette FROM Bornette WHERE numStation = ? and numVelo IS NULL");
+				stBornette.setInt(1, numStation);
+				ResultSet rsBornette = stBornette.executeQuery();
+				System.out.println("Bornette libre dans la station n°"
+						+ numStation+" : ");
+				while (rsBornette.next()) {
+					System.out.println("Bornette n°"
+							+ rsBornette.getInt("numBornette"));
+				}
+				stBornette.close();
+				rsBornette.close();
+			} else {
+				System.out.println("Aucune bornette libre dans cette station.");
+			}
 		}
-		// }
-
-		stBornette.close();
-		rsBornette.close();
+		stBornetteLibre.close();
+		rsBornetteLibre.close();
 
 	}
 
-	public static int getNbVeloDispo(Connection conn, int numStation, int nbResa)
+	/**
+	 * Retourne le nombre  de vélos libres OK attachés à une bornette OK
+	 * @param conn
+	 * @param numStation
+	 * @param nbResa
+	 * @return
+	 * @throws SQLException
+	 */
+	public static int getNbVeloDispo(Connection conn, int numStation)
 			throws SQLException {
 		int nbVelo = 0;
 		int numVelo = 0;
@@ -93,6 +117,15 @@ public class Station {
 
 	}
 
+	/**
+	 * Retourne un vélo libre OK attaché à une bornette OK
+	 * @param conn
+	 * @param numStation
+	 * @param nbVeloDispo
+	 * @param nbResa
+	 * @return
+	 * @throws SQLException
+	 */
 	public static int getVelo(Connection conn, int numStation, int nbVeloDispo,
 			int nbResa) throws SQLException {
 		int numVelo = 0;
@@ -103,7 +136,7 @@ public class Station {
 			stVeloUnique.setMaxRows(1);
 			ResultSet rsVeloUnique = stVeloUnique.executeQuery();
 			if (rsVeloUnique.next()) {
-				System.out.println(rsVeloUnique.getInt("numVelo"));
+				//System.out.println(rsVeloUnique.getInt("numVelo"));
 				numVelo = rsVeloUnique.getInt("numVelo");
 			}
 			stVeloUnique.close();
@@ -161,22 +194,52 @@ public class Station {
 			int numStation) throws SQLException {
 		// rÃ©cup d'une bornette inoccupÃ©e
 		PreparedStatement stBorne = conn
-				.prepareStatement("SELECT numBornette FROM Bornette WHERE numVelo IS NULL AND numStation = ?");
+				.prepareStatement("SELECT numBornette FROM Bornette WHERE numVelo IS NULL AND numStation = ? AND etat='OK'");
 		stBorne.setInt(1, numStation);
 		ResultSet rsBorne = stBorne.executeQuery();
 		if (rsBorne.next()) {
 			int numBornette = rsBorne.getInt("numBornette");
-			System.out.println("---> Rattachement du vÃ©lo " + numVelo+ " a la borne " + numBornette);
-			PreparedStatement stBornette = conn.prepareStatement("UPDATE Bornette SET numVelo = ? WHERE numBornette = ? ");
+			System.out.println("---> Rattachement du vÃ©lo " + numVelo
+					+ " a la borne " + numBornette);
+			PreparedStatement stBornette = conn
+					.prepareStatement("UPDATE Bornette SET numVelo = ? WHERE numBornette = ? ");
 			stBornette.setInt(1, numVelo);
 			stBornette.setInt(2, numBornette);
 			stBornette.executeUpdate();
 			stBornette.close();
 
 		} else {
-			System.out.println("DEPOT IMPOSSIBLE - Aucune borne n'est libre ou la station n'existe pas.");
+			System.out
+					.println("DEPOT IMPOSSIBLE - Aucune borne n'est libre ou la station n'existe pas.");
 		}
 		stBorne.close();
 		rsBorne.close();
+	}
+
+	/**
+	 * Verifie si un numero de bornette spécifié correspond a une bornette libre
+	 * @param conn
+	 * @param numBornette
+	 * @param numStation
+	 * @throws SQLException
+	 */
+	public static boolean checkDisponibiliteBornette(Connection conn,
+			int numBornette, int numStation) throws SQLException {
+		boolean estLibre = false;
+		PreparedStatement stBorne = conn
+				.prepareStatement("SELECT count(numBornette) AS nbResult FROM Bornette WHERE numVelo IS NULL AND numStation = ? AND numBornette = ? AND etat='OK'");
+		stBorne.setInt(1, numStation);
+		stBorne.setInt(2, numBornette);
+		ResultSet rsBorne = stBorne.executeQuery();
+		if (rsBorne.next()) {			
+			if(rsBorne.getInt("nbResult")!=0){
+				estLibre = true;
+			}else{
+				System.out.println("Erreur. Veuillez saisir un numéro de borne disponible");
+			}
+		}
+		stBorne.close();
+		rsBorne.close();
+		return estLibre;
 	}
 }
