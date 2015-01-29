@@ -384,10 +384,11 @@ public class MenuClient {
 			e.printStackTrace();
 		}
 		boolean choixBornetteOK = false;
+		int numBornette = 0;
 		while (!choixBornetteOK) {
 			System.out
 					.println("Veuillez choisir une borne parmi celles listï¿½es ci-dessus : ");
-			int numBornette = sc.nextInt();
+			numBornette = sc.nextInt();
 			try {
 				choixBornetteOK = Station.checkDisponibiliteBornette(
 						Connexion.getConnexion(), numBornette, numStation);
@@ -405,22 +406,23 @@ public class MenuClient {
 			int numClient = Client.getClientFromCode(Connexion.getConnexion(),
 					codeSecret);
 			if (numClient != 0) {
+				
 				int numVeloARendre = Client.getVeloLocation(
 						Connexion.getConnexion(), numClient);
+				System.out.println("NumVerlo a rendre : "+numVeloARendre);
 				if (numVeloRendu == numVeloARendre && numVeloARendre != 0) {
+					System.out.println("Same vélo");
 
 					Client.checkAmende(Connexion.getConnexion(), numClient,
 							numVeloRendu);
 					String typeRetourStation = Station.getTypeStation(
 							Connexion.getConnexion(), numStation);
+					System.out.println("Type retour station : "+typeRetourStation);
+					
+					Client.decompterRemise(Connexion.getConnexion(), numClient);
 					Client.checkNouvelleRemise(Connexion.getConnexion(),
 							typeRetourStation, numClient, numVeloRendu);
-					// 2 - Dï¿½compter remise
-					// TODO
-					// maj fin loc
-					// TODO
-					// maj numVelo de Bornette
-					// TODO
+					Station.attacherVeloABornette(Connexion.getConnexion(),numBornette, numVeloRendu);
 				}
 			}
 		} catch (SQLException e) {
@@ -457,11 +459,14 @@ public class MenuClient {
 						if (connexion) {
 							int nbResa = Reservation.getNbResaAjd(
 									Connexion.getConnexion(), numStation);
+							System.out.println("NBRESA = "+nbResa);
 							int nbVeloDispo = Station.getNbVeloDispo(
 									Connexion.getConnexion(), numStation);
+							System.out.println("nbvelodispo : "+nbVeloDispo);
 							int numVelo = Station.getVelo(
 									Connexion.getConnexion(), numStation,
 									nbVeloDispo, nbResa);
+							System.out.println("numVelo : "+numVelo);
 							if (numVelo != 0) {
 								Location.louerAbo(Connexion.getConnexion(),
 										numCLient, numVelo, numStation);
@@ -486,8 +491,6 @@ public class MenuClient {
 					numCB = sc2.nextLine();
 					int numClient = Client.creerNonAbonne(
 							Connexion.getConnexion(), numCB);
-					System.out.println("Num client et num nonabo : "
-							+ numClient);
 					int nbResa = Reservation.getNbResaAjd(
 							Connexion.getConnexion(), numStation);
 					int nbVeloDispo = Station.getNbVeloDispo(
@@ -578,5 +581,4 @@ public class MenuClient {
 				.println("Votre abonnement a ete pris en compte. Date d'expiration : "
 						+ sdf.format(dateFinAbo));
 	}
-
 }

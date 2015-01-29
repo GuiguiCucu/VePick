@@ -197,8 +197,8 @@ public class Client {
 
 			int retard = hoursDifference(now, dateLoc) - 12;
 			if (retard >= 12) {
-				System.out.println("Vous avez rendu votre v�lo avec " + retard
-						+ " heures de retards");
+				System.out.println("Vous avez rendu votre v�lo avec "
+						+ retard + " heures de retards");
 				System.out.println("Vous �coppez d'une amende de 10�");
 				Client.genererAmende(conn, dateLoc, numClient, numVeloRendu);
 			}
@@ -311,24 +311,31 @@ public class Client {
 		if (Client.isAbonne(conn, numClient)) {
 			// Remise en cour?
 			PreparedStatement stRemise = conn
-					.prepareStatement("SELECT COUNT(*) AS numRemiseAbonne, numRemise, pourCentRemise FROM RemiseAbonne WHERE numClient = ?");
+					.prepareStatement("SELECT COUNT(numRemise) AS numRemiseAbonne FROM RemiseAbonne WHERE numClient = ?");
 			stRemise.setInt(1, numClient);
 			ResultSet rsRemise = stRemise.executeQuery();
 			if (rsRemise.next()) {
 				int numRemiseAbonne = rsRemise.getInt("numRemiseAbonne");
 				if (numRemiseAbonne == 1) {
-					System.out
-							.println("Vous bénéficiez d'une remise dûe à une ancienne location");
-					System.out.println("Vous avez droit à "
-							+ rsRemise.getInt("pourCentRemise")
-							+ "% de remise sur votre location actuelle");
-					// Suppression remise
-					PreparedStatement stSuppressionRemiseAbo = conn
-							.prepareStatement("DELETE FROM RemiseAbonne WHERE numRemise = ?");
-					stSuppressionRemiseAbo.setInt(1,
-							rsRemise.getInt("numRemise"));
-					stSuppressionRemiseAbo.executeUpdate();
-					stSuppressionRemiseAbo.close();
+
+					PreparedStatement stInfoRemise = conn
+							.prepareStatement("SELECT numRemise, pourCentRemise FROM RemiseAbonne WHERE numClient = ?");
+					stInfoRemise.setInt(1, numClient);
+					ResultSet rsInfoRemise = stInfoRemise.executeQuery();
+					if (rsInfoRemise.next()) {
+						System.out
+								.println("Vous bénéficiez d'une remise dûe à une ancienne location");
+						System.out.println("Vous avez droit à "
+								+ rsRemise.getInt("pourCentRemise")
+								+ "% de remise sur votre location actuelle");
+						// Suppression remise
+						PreparedStatement stSuppressionRemiseAbo = conn
+								.prepareStatement("DELETE FROM RemiseAbonne WHERE numRemise = ?");
+						stSuppressionRemiseAbo.setInt(1,
+								rsRemise.getInt("numRemise"));
+						stSuppressionRemiseAbo.executeUpdate();
+						stSuppressionRemiseAbo.close();
+					}
 				} else {
 					System.out
 							.println("Vous n'avez pas de remise en cours cher abonné");
@@ -349,7 +356,8 @@ public class Client {
 				int numRemiseNonAbonne = rsRemiseNonAbo
 						.getInt("numRemiseNonAbonne");
 				if (numRemiseNonAbonne == 1) {
-					System.out.println("Vous bénéficiez d'une remise dûe à une ancienne location");
+					System.out
+							.println("Vous bénéficiez d'une remise dûe à une ancienne location");
 					System.out.println("Vous avez droit à "
 							+ rsRemiseNonAbo.getInt("pourCentRemise")
 							+ "% de remise sur votre location actuelle");
