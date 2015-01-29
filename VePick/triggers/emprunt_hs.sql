@@ -19,6 +19,6 @@ END;
 
 -- on sait que le Vélo 2 est HS, on tente une location sur ce vélo
 
-INSERT INTO Location values (1, 2, TO_DATE('2015/01/16 14:34:11', 'yyyy/mm/dd hh24:mi:ss'),NULL, 'Vplus', 'Vmoins');
+INSERT INTO Location values (6, 2, TO_DATE('2015/01/16 14:34:11', 'yyyy/mm/dd hh24:mi:ss'),NULL, 'Vplus', 'Vmoins');
 
 */
