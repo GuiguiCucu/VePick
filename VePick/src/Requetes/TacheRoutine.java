@@ -63,4 +63,148 @@ public class TacheRoutine {
 		stTache.close();
 		rsTache.close();
 	}
+	
+	/**
+	 * permet au superviseur de modifier une routine
+	 * 
+	 * @param conn
+	 * @param numVehicule
+	 * @throws SQLException
+	 */
+	public static void modifierRoutine() throws SQLException {
+		
+	}
+
+	public static void supprimerRoutine(Connection con, int numVehicule, int numRang) {
+		PreparedStatement stTache;
+		try {
+			stTache = con.prepareStatement("DELETE FROM TacheRoutine WHERE numVehicule = ? AND rang >= ?");
+			stTache.setInt(1, numVehicule);		
+			stTache.setInt(2, numRang);
+			
+			ResultSet rsTache = stTache.executeQuery();
+			
+			if(rsTache.next()){
+				System.out.println("La routine a été supprimé à partir du rang : "+numRang);
+			}
+			else{
+				System.out.println("ERREUR - Impossible de supprimer la routine!");
+			}
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+
+		
+	}
+
+	public static void afficherTaches(Connection con) {
+		PreparedStatement stTache;
+		
+		
+		
+		try {
+			stTache = con.prepareStatement("SELECT * FROM Tache ORDER BY numTache");
+			ResultSet rsTache = stTache.executeQuery();
+			
+			if(rsTache.next()){
+				System.out.println("num Tache: "+rsTache.getString("numTache"));
+				System.out.println("nom Tache: "+rsTache.getString("nomTache"));
+				System.out.println("nb Unité: "+rsTache.getString("nbUnite"));
+			}
+			else{
+				System.out.println("ERREUR - Impossible d'afficher les taches!");
+			}
+			
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+	}
+	
+	
+	public static void ajouterTacheRoutine(Connection con, int numVehicule, int numTache) {
+		int rang = 0;
+		PreparedStatement stTache;
+		PreparedStatement stTache2;
+		try {
+			stTache = con.prepareStatement("SELECT MAX(rang) AS rang FROM TacheRoutine WHERE numVehicule = ?");
+			stTache.setInt(1, numVehicule);
+			
+			ResultSet rsTache = stTache.executeQuery();
+			
+			if(rsTache.next()){
+				rang = rsTache.getInt("rang") + 1;
+				System.out.println("Prochain rang:" + rang);
+			}
+			else{
+				System.out.println("ERREUR - Impossible de calculer le prochain rang!");
+			}
+
+			stTache2 = con.prepareStatement("INSERT INTO TacheRoutine values(?, ?, ?, 'En attente')");
+			stTache2.setInt(1, numVehicule);
+			stTache2.setInt(2, numTache);
+			stTache2.setInt(3, rang);
+			
+			ResultSet rsTache2 = stTache2.executeQuery();
+			
+			if(rsTache2.next()){
+				System.out.println("Tache routine ajouté au rang:" + rang);
+			}
+			else{
+				System.out.println("ERREUR - Impossible d'ajouter la tache routine!");
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+		
+	}
+
+	public static int ajouterTache(Connection con, int numVehicule, String nomTache,int nbUnite) {
+		PreparedStatement stTache;
+		PreparedStatement stTache2;
+		int numTache = 0;
+		try {
+			
+			stTache = con.prepareStatement("SELECT MAX(numTache) AS numTache FROM Tache");
+			
+			ResultSet rsTache = stTache.executeQuery();
+			
+			if(rsTache.next()){
+				numTache = rsTache.getInt("numTache") + 1;
+				System.out.println("Prochain numero de tache:" + numTache);
+			}
+			else{
+				System.out.println("ERREUR - Impossible de calculer le prochain numero de tache!");
+			}
+			
+			
+			stTache2 = con.prepareStatement("INSERT INTO Tache values(?, ?, ?)");
+			stTache2.setInt(1, numTache);
+			stTache2.setString(2, nomTache);
+			stTache2.setInt(3, nbUnite);
+			
+			ResultSet rsTache2 = stTache2.executeQuery();
+			
+			if(rsTache2.next()){
+				System.out.println("Tache ajouté avec le numéro:" + numTache);
+			}
+			else{
+				System.out.println("ERREUR - Impossible d'ajouter la nouvelle tache!");
+			}
+			
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+		
+		return numTache;
+		
+	} 
 }
