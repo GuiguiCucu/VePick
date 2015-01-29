@@ -10,4 +10,5 @@ start etat_exclusif_velo_bornette.sql
 start rang_tache.sql
 start ordre_routine.sql
 start capa_vehicule.sql
-start ordre_tache.sql
+start ordre_plage.sql
+start superposition_plagehoraire.sql

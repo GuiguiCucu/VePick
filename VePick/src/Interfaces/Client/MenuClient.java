@@ -96,7 +96,6 @@ public class MenuClient {
 						emprunterUneJournee(numCLient);
 						break;
 					case 2:
-						System.out.println("CAS chiant");
 						empruntRepetSurPeriode(numCLient);
 						break;
 					case 3:
@@ -379,18 +378,16 @@ public class MenuClient {
 				.println("[Simulation]Veuillez saisir le num�ro de la station ou vous �tes : ");
 		Scanner sc = new Scanner(System.in);
 		int numStation = sc.nextInt();
-		int numBornette = 0;
+		try {
+			Station.afficherBornesLibres(Connexion.getConnexion(), numStation);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		boolean choixBornetteOK = false;
 		while (!choixBornetteOK) {
-			try {
-				Station.afficherBornesLibres(Connexion.getConnexion(),
-						numStation);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
 			System.out
 					.println("Veuillez choisir une borne parmi celles list�es ci-dessus : ");
-			numBornette = sc.nextInt();
+			int numBornette = sc.nextInt();
 			try {
 				choixBornetteOK = Station.checkDisponibiliteBornette(
 						Connexion.getConnexion(), numBornette, numStation);
@@ -416,16 +413,14 @@ public class MenuClient {
 							numVeloRendu);
 					String typeRetourStation = Station.getTypeStation(
 							Connexion.getConnexion(), numStation);
-					
-					// 1 - Décompter remise
-					Client.decompterRemise(Connexion.getConnexion(), numClient);
-					
-					Client.checkNouvelleRemise(Connexion.getConnexion(),
+					Client.checkRemise(Connexion.getConnexion(),
 							typeRetourStation, numClient, numVeloRendu);
-
-					// maj numVelo de Bornette. Un trigger update la location
-					Station.attacherVeloABornette(Connexion.getConnexion(),numBornette, numVeloRendu);
-					System.out.println("Merci d'avoir retourné le vélo");
+					// 2 - D�compter remise
+					// TODO
+					// maj fin loc
+					// TODO
+					// maj numVelo de Bornette
+					// TODO
 				}
 			}
 		} catch (SQLException e) {
@@ -484,7 +479,8 @@ public class MenuClient {
 				break;
 			case 2:
 				try {
-					System.out.println("Veuillez saisir votre num�ro de CB : ");
+					System.out
+							.println("Veuillez saisir votre num�ro de CB : ");
 					Scanner sc2 = new Scanner(System.in);
 					String numCB = "";
 					numCB = sc2.nextLine();
