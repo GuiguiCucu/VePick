@@ -21,19 +21,19 @@ public class Test {
 		 System.out.println("La location doit-être rendu avant "+
 		 sdf.format(dateFinLoc) +" au plus tard");
 
-		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm dd-MM-yyyy");
-		SimpleDateFormat sdf1 = new SimpleDateFormat("dd-MMM-yy");
-		Calendar cal = java.util.Calendar.getInstance();
-		java.util.Date utilDate = cal.getTime();
-		Date dateAbonnement = new Date(utilDate.getTime());
-		System.out.println(sdf.format(dateAbonnement));
-		System.out.println(sdf1.format(dateAbonnement));
+//		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm dd-MM-yyyy");
+//		SimpleDateFormat sdf1 = new SimpleDateFormat("dd-MMM-yy");
+//		Calendar cal = java.util.Calendar.getInstance();
+//		java.util.Date utilDate = cal.getTime();
+//		Date dateAbonnement = new Date(utilDate.getTime());
+//		System.out.println(sdf.format(dateAbonnement));
+//		System.out.println(sdf1.format(dateAbonnement));
 
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(dateAbonnement);
-		calendar.add(Calendar.YEAR, 1);
-		Date dateFinAbo = new Date(calendar.getTimeInMillis());
-		System.out.println(sdf.format(dateFinAbo));
+//		Calendar calendar = Calendar.getInstance();
+//		calendar.setTime(dateAbonnement);
+//		calendar.add(Calendar.YEAR, 1);
+//		Date dateFinAbo = new Date(calendar.getTimeInMillis());
+//		System.out.println(sdf.format(dateFinAbo));
 
 		Scanner sc = new Scanner(System.in);
 		String strdate = sc.nextLine();

@@ -413,7 +413,7 @@ public class MenuClient {
 							numVeloRendu);
 					String typeRetourStation = Station.getTypeStation(
 							Connexion.getConnexion(), numStation);
-					Client.checkRemise(Connexion.getConnexion(),
+					Client.checkNouvelleRemise(Connexion.getConnexion(),
 							typeRetourStation, numClient, numVeloRendu);
 					// 2 - D�compter remise
 					// TODO
