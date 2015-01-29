@@ -371,51 +371,57 @@ public class MenuClient {
 				.println("[Simulation]Veuillez saisir le num�ro de la station ou vous �tes : ");
 		Scanner sc = new Scanner(System.in);
 		int numStation = sc.nextInt();
+		int res = 0;
 		try {
-			Station.afficherBornesLibres(Connexion.getConnexion(), numStation);
+			res = Station.afficherBornesLibres(Connexion.getConnexion(),
+					numStation);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		boolean choixBornetteOK = false;
-		int numBornette = 0;
-		while (!choixBornetteOK) {
-			System.out
-					.println("Veuillez choisir une borne parmi celles list�es ci-dessus : ");
-			numBornette = sc.nextInt();
-			try {
-				choixBornetteOK = Station.checkDisponibiliteBornette(
-						Connexion.getConnexion(), numBornette, numStation);
-			} catch (SQLException e1) {
-				e1.printStackTrace();
-			}
-		}
-
-		System.out
-				.println("[SIMULATION RFID]Saisir le num�ro du v�lo � rendre : ");
-		int numVeloRendu = sc.nextInt();
-		System.out.println("Saisissez votre code secret : ");
-		int codeSecret = sc.nextInt();
-		try {
-			int numClient = Client.getClientFromCode(Connexion.getConnexion(),
-					codeSecret);
-			if (numClient != 0) {
-
-				int numVeloARendre = Client.getVeloLocation(
-						Connexion.getConnexion(), numClient);
-				if (numVeloRendu == numVeloARendre && numVeloARendre != 0) {
-					Client.checkAmende(Connexion.getConnexion(), numClient,
-							numVeloRendu);
-					String typeRetourStation = Station.getTypeStation(
-							Connexion.getConnexion(), numStation);
-					Client.decompterRemise(Connexion.getConnexion(), numClient);
-					Client.checkNouvelleRemise(Connexion.getConnexion(),
-							typeRetourStation, numClient, numVeloRendu);
-					Station.attacherVeloABornette(Connexion.getConnexion(),
-							numBornette, numVeloRendu, typeRetourStation, numClient);
+		if (res != 0) {
+			boolean choixBornetteOK = false;
+			int numBornette = 0;
+			while (!choixBornetteOK) {
+				System.out
+						.println("Veuillez choisir une borne parmi celles list�es ci-dessus : ");
+				numBornette = sc.nextInt();
+				try {
+					choixBornetteOK = Station.checkDisponibiliteBornette(
+							Connexion.getConnexion(), numBornette, numStation);
+				} catch (SQLException e1) {
+					e1.printStackTrace();
 				}
 			}
-		} catch (SQLException e) {
-			e.printStackTrace();
+
+			System.out
+					.println("[SIMULATION RFID]Saisir le num�ro du v�lo � rendre : ");
+			int numVeloRendu = sc.nextInt();
+			System.out.println("Saisissez votre code secret : ");
+			int codeSecret = sc.nextInt();
+			try {
+				int numClient = Client.getClientFromCode(
+						Connexion.getConnexion(), codeSecret);
+				if (numClient != 0) {
+
+					int numVeloARendre = Client.getVeloLocation(
+							Connexion.getConnexion(), numClient);
+					if (numVeloRendu == numVeloARendre && numVeloARendre != 0) {
+						Client.checkAmende(Connexion.getConnexion(), numClient,
+								numVeloRendu);
+						String typeRetourStation = Station.getTypeStation(
+								Connexion.getConnexion(), numStation);
+						Client.decompterRemise(Connexion.getConnexion(),
+								numClient);
+						Client.checkNouvelleRemise(Connexion.getConnexion(),
+								typeRetourStation, numClient, numVeloRendu);
+						Station.attacherVeloABornette(Connexion.getConnexion(),
+								numBornette, numVeloRendu, typeRetourStation,
+								numClient);
+					}
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 

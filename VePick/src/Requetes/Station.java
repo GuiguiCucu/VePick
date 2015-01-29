@@ -64,8 +64,9 @@ public class Station {
 	 * @param numStation
 	 * @throws SQLException
 	 */
-	public static void afficherBornesLibres(Connection conn, int numStation)
+	public static int afficherBornesLibres(Connection conn, int numStation)
 			throws SQLException {
+		int res = 0;
 		PreparedStatement stBornetteLibre = conn
 				.prepareStatement("SELECT count(numBornette) AS nbBornetteLibre FROM Bornette WHERE numStation = ? and numVelo IS NULL");
 		stBornetteLibre.setInt(1, numStation);
@@ -84,13 +85,14 @@ public class Station {
 				}
 				stBornette.close();
 				rsBornette.close();
+				res=1;
 			} else {
 				System.out.println("Aucune bornette libre dans cette station.");
 			}
 		}
 		stBornetteLibre.close();
 		rsBornetteLibre.close();
-
+		return res;
 	}
 
 	/**
