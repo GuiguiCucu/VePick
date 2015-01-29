@@ -136,7 +136,6 @@ public class MenuClient {
 		System.out
 				.println("Veuillez saisir le délai entre deux réservations :");
 		delaiRepet = sc.nextInt();
-		System.out.println("END SAISIES");
 
 		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
 		// date de début de la période
@@ -182,9 +181,6 @@ public class MenuClient {
 
 		SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy");
 		String dateAjd = sdf.format(now);
-
-		System.out.println("END DATE");
-
 		if (dateReservationFinPeriode.after(dateReservationDebutPeriode)) {
 			if (dateReservationDebutPeriode.after(now)) {
 				if (dateReservationFinPeriode.after(now)) {
@@ -193,7 +189,6 @@ public class MenuClient {
 						etat = "En cours";
 					}
 					try {
-						System.out.println("GO INSERT");
 						Reservation.reserverJourPeriode(
 								Connexion.getConnexion(), numCLient,
 								numStation, dateReservationDebutPeriodeUtil,

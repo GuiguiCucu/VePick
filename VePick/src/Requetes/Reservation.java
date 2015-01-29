@@ -67,6 +67,7 @@ public class Reservation {
 		stReservation.setString(3, dateResa);
 		stReservation.setString(4, etat);
 		stReservation.executeUpdate();
+		System.out.println("Une réservation a été crée pour le "+dateJourResa.toString());
 
 		PreparedStatement stJourReserve = conn
 				.prepareStatement("INSERT INTO JourReserve values (?, ?, TO_DATE(?, 'dd-mm-yyyy hh24:mi:ss'),TO_DATE(?, 'dd-mm-yyyy') )");
@@ -120,7 +121,7 @@ public class Reservation {
 			stJourReserve.close();
 		}
 		stReservation.close();
-
+		System.out.println(diffDay + " jours ont été reservés du "+dateDebutPeriode.toString()+" au "+ dateFinPeriode.toString());
 	}
 
 	/**
@@ -168,8 +169,6 @@ public class Reservation {
 		// Creation des jours réservés
 		long diffDay = getDayCount(dateDebutPeriode, dateFinPeriode);
 		long nbJourSurPeriode = diffDay/delaiRepet;
-		System.out.println("diffday = " + diffDay);
-		System.out.println("nbJourSurPer = "+nbJourSurPeriode);
 
 		for (int i = 0; i <= nbJourSurPeriode; i++) {
 			java.util.Calendar cal2 = java.util.Calendar.getInstance();
@@ -189,6 +188,7 @@ public class Reservation {
 			stJourReserve.executeUpdate();
 			stJourReserve.close();
 		}
+		System.out.println(nbJourSurPeriode+" réservations ont été faites.");
 		stReservation.close();
 	}
 }

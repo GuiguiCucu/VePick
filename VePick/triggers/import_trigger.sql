@@ -12,3 +12,4 @@ start ordre_routine.sql
 start capa_vehicule.sql
 start ordre_plage.sql
 start superposition_plagehoraire.sql
+start recouvrement_reservation_jour.sql
