@@ -19,7 +19,6 @@ public class Client {
 		stClient.setInt(1, numCLient);
 		stClient.setInt(2, codeSecretClient);
 		ResultSet rsClient = stClient.executeQuery();
-
 		if (rsClient.next()) {
 			identification = true;
 		} else {
@@ -260,6 +259,7 @@ public class Client {
 						stRemiseAbo.setInt(2, numClient);
 						stRemiseAbo.executeUpdate();
 						stRemiseAbo.close();
+						System.out.println("Vous avez droit a une remise de 10 % sur votre prochaine location.");
 					}
 					stNumAbo.close();
 					rsNumAbo.close();
@@ -278,6 +278,7 @@ public class Client {
 						stRemiseNonAbo.setInt(2, numClient);
 						stRemiseNonAbo.executeUpdate();
 						stRemiseNonAbo.close();
+						System.out.println("Vous avez droit a une remise de 10 % sur votre prochaine location.");
 					}
 					stNumNonAbo.close();
 					rsNumNonAbo.close();

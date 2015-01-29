@@ -372,8 +372,6 @@ public class MenuClient {
 		System.out.println("---Client - Rendre vï¿½lo---");
 		System.out.println("--------------------------------");
 
-		// Afficher borne libre station Saisir code client Yolo
-
 		System.out
 				.println("[Simulation]Veuillez saisir le numï¿½ro de la station ou vous ï¿½tes : ");
 		Scanner sc = new Scanner(System.in);
@@ -406,23 +404,19 @@ public class MenuClient {
 			int numClient = Client.getClientFromCode(Connexion.getConnexion(),
 					codeSecret);
 			if (numClient != 0) {
-				
+
 				int numVeloARendre = Client.getVeloLocation(
 						Connexion.getConnexion(), numClient);
-				System.out.println("NumVerlo a rendre : "+numVeloARendre);
 				if (numVeloRendu == numVeloARendre && numVeloARendre != 0) {
-					System.out.println("Same vélo");
-
 					Client.checkAmende(Connexion.getConnexion(), numClient,
 							numVeloRendu);
 					String typeRetourStation = Station.getTypeStation(
 							Connexion.getConnexion(), numStation);
-					System.out.println("Type retour station : "+typeRetourStation);
-					
 					Client.decompterRemise(Connexion.getConnexion(), numClient);
 					Client.checkNouvelleRemise(Connexion.getConnexion(),
 							typeRetourStation, numClient, numVeloRendu);
-					Station.attacherVeloABornette(Connexion.getConnexion(),numBornette, numVeloRendu);
+					Station.attacherVeloABornette(Connexion.getConnexion(),
+							numBornette, numVeloRendu, typeRetourStation, numClient);
 				}
 			}
 		} catch (SQLException e) {
@@ -459,14 +453,11 @@ public class MenuClient {
 						if (connexion) {
 							int nbResa = Reservation.getNbResaAjd(
 									Connexion.getConnexion(), numStation);
-							System.out.println("NBRESA = "+nbResa);
 							int nbVeloDispo = Station.getNbVeloDispo(
 									Connexion.getConnexion(), numStation);
-							System.out.println("nbvelodispo : "+nbVeloDispo);
 							int numVelo = Station.getVelo(
 									Connexion.getConnexion(), numStation,
 									nbVeloDispo, nbResa);
-							System.out.println("numVelo : "+numVelo);
 							if (numVelo != 0) {
 								Location.louerAbo(Connexion.getConnexion(),
 										numCLient, numVelo, numStation);
@@ -484,8 +475,7 @@ public class MenuClient {
 				break;
 			case 2:
 				try {
-					System.out
-							.println("Veuillez saisir votre numï¿½ro de CB : ");
+					System.out.println("Veuillez saisir votre numï¿½ro de CB : ");
 					Scanner sc2 = new Scanner(System.in);
 					String numCB = "";
 					numCB = sc2.nextLine();
@@ -500,6 +490,9 @@ public class MenuClient {
 					if (numVelo != 0) {
 						Location.louerNonAbo(Connexion.getConnexion(),
 								numClient, numVelo, numStation);
+					} else {
+						System.out
+								.println("Aucun vÃ©lo disponible dans votre station");
 					}
 				} catch (SQLException e) {
 					e.printStackTrace();

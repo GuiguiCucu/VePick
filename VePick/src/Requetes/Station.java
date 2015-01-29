@@ -17,7 +17,7 @@ public class Station {
 			PreparedStatement stType = conn
 					.prepareStatement("SELECT idType, libelle FROM TypeStation WHERE idType IN  (SELECT idType FROM PlageHoraire WHERE numStation = ? AND trunc(dateDebut) - trunc(sysdate) = 0  )");
 			stType.setInt(1, rsStation.getInt("numStation"));
-			//DONE
+			// DONE
 			// SELECT * FROM plagehoraire WHERE trunc(dateDebut) -
 			// trunc(sysdate) = 0;
 			// INSERT INTO PlageHoraire values (4, 1, 3, TO_DATE('2015/01/28
@@ -59,6 +59,7 @@ public class Station {
 
 	/**
 	 * Affiche les bornes sans v�lo � la station et en �tat OK
+	 * 
 	 * @param conn
 	 * @param numStation
 	 * @throws SQLException
@@ -76,7 +77,7 @@ public class Station {
 				stBornette.setInt(1, numStation);
 				ResultSet rsBornette = stBornette.executeQuery();
 				System.out.println("Bornette libre dans la station n�"
-						+ numStation+" : ");
+						+ numStation + " : ");
 				while (rsBornette.next()) {
 					System.out.println("Bornette n�"
 							+ rsBornette.getInt("numBornette"));
@@ -93,7 +94,8 @@ public class Station {
 	}
 
 	/**
-	 * Retourne le nombre  de v�los libres OK attach�s � une bornette OK
+	 * Retourne le nombre de v�los libres OK attach�s � une bornette OK
+	 * 
 	 * @param conn
 	 * @param numStation
 	 * @param nbResa
@@ -119,6 +121,7 @@ public class Station {
 
 	/**
 	 * Retourne un v�lo libre OK attach� � une bornette OK
+	 * 
 	 * @param conn
 	 * @param numStation
 	 * @param nbVeloDispo
@@ -136,7 +139,7 @@ public class Station {
 			stVeloUnique.setMaxRows(1);
 			ResultSet rsVeloUnique = stVeloUnique.executeQuery();
 			if (rsVeloUnique.next()) {
-				//System.out.println(rsVeloUnique.getInt("numVelo"));
+				// System.out.println(rsVeloUnique.getInt("numVelo"));
 				numVelo = rsVeloUnique.getInt("numVelo");
 			}
 			stVeloUnique.close();
@@ -218,6 +221,7 @@ public class Station {
 
 	/**
 	 * Verifie si un numero de bornette sp�cifi� correspond a une bornette libre
+	 * 
 	 * @param conn
 	 * @param numBornette
 	 * @param numStation
@@ -231,11 +235,12 @@ public class Station {
 		stBorne.setInt(1, numStation);
 		stBorne.setInt(2, numBornette);
 		ResultSet rsBorne = stBorne.executeQuery();
-		if (rsBorne.next()) {			
-			if(rsBorne.getInt("nbResult")!=0){
+		if (rsBorne.next()) {
+			if (rsBorne.getInt("nbResult") != 0) {
 				estLibre = true;
-			}else{
-				System.out.println("Erreur. Veuillez saisir un num�ro de borne disponible");
+			} else {
+				System.out
+						.println("Erreur. Veuillez saisir un num�ro de borne disponible");
 			}
 		}
 		stBorne.close();
@@ -243,12 +248,21 @@ public class Station {
 		return estLibre;
 	}
 
-	public static void attacherVeloABornette(Connection conn,
-			int numBornette, int numVeloRendu) throws SQLException {
-		PreparedStatement stBornette = conn.prepareStatement("UPDATE Bornette SET numVelo = ? WHERE numBornette = ?");
+	public static void attacherVeloABornette(Connection conn, int numBornette,
+			int numVeloRendu, String typeRetourStation, int numClient) throws SQLException {
+		PreparedStatement stBornette = conn
+				.prepareStatement("UPDATE Bornette SET numVelo = ? WHERE numBornette = ?");
 		stBornette.setInt(1, numVeloRendu);
 		stBornette.setInt(2, numBornette);
 		stBornette.executeUpdate();
 		stBornette.close();
+
+		PreparedStatement stLoc = conn
+				.prepareStatement("UPDATE Location SET TypeStationArrivee = ? WHERE numClient = ? and TypeStationArrivee IS NULL");
+		stLoc.setString(1, typeRetourStation);
+		stLoc.setInt(2, numClient);
+		stLoc.executeUpdate();
+		stLoc.close();
+		System.out.println("Vous venez d'attacher le vélo "+numVeloRendu+" sur la bornette "+numBornette+". Merci cher client N°"+numClient);
 	}
 }
