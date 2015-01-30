@@ -33,7 +33,7 @@ On insert des velos, pour tester
 INSERT INTO ActionVehiculeVelo values (2, 4, 16, 'Chargement velo');
 INSERT INTO ActionVehiculeVelo values (4, 4, 14, 'Chargement velo');
 INSERT INTO ActionVehiculeVelo values (5, 4, 13, 'Chargement velo');
-INSERT INTO ActionVehiculeVelo values (3, 4, 15, 'Depot velo');
+INSERT INTO ActionVehiculeVelo values (3, 4, 14, 'Depot velo');
 INSERT INTO ActionVehiculeVelo values (6, 4, 12, 'Chargement velo');
 
 
