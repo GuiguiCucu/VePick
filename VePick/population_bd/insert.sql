@@ -101,6 +101,8 @@ INSERT INTO Tache values (1, 'Aller au centre de reparation', 4);
 
 INSERT INTO TacheRoutine values (1, 1, 1, 'En attente');
 INSERT INTO TacheRoutine values (2, 1, 1, 'En attente');
+INSERT INTO TacheRoutine values (1, 1, 2, 'En attente');
+INSERT INTO TacheRoutine values (1, 1, 3, 'En attente');
 
 INSERT INTO Amende values (1,3.2,1,1,TO_DATE('2015/01/16 14:34:11', 'yyyy/mm/dd hh24:mi:ss'));
 INSERT INTO Amende values (2,3.2,3,2,TO_DATE('2015/01/12 12:20:35', 'yyyy/mm/dd hh24:mi:ss'));
