@@ -71,11 +71,13 @@ INSERT INTO Client values (2, 423, '4578 7144 7889 7412');
 INSERT INTO Client values (3, 512, '4578 7144 7889 7892');
 INSERT INTO Client values (4, 321, '4578 7144 7889 7493');
 INSERT INTO Client values (5, 391, '4578 7144 7889 8792');
+INSERT INTO Client values (6, 666, '4578 7144 7889 8792');
 
 INSERT INTO NonAbonne values (1, TO_DATE('2015/01/16 14:34:11', 'yyyy/mm/dd hh24:mi:ss'));
 INSERT INTO NonAbonne values (2, TO_DATE('2015/01/16 14:34:11', 'yyyy/mm/dd hh24:mi:ss'));
 
 INSERT INTO Abonne values (2, 'Michel', 'Mathieu', TO_DATE('1992/01/16 18:34:11', 'yyyy/mm/dd hh24:mi:ss'), 'Homme', 'Grenoble', '5 place Verdun', 38000, TO_DATE('2015/01/10 18:34:11', 'yyyy/mm/dd hh24:mi:ss'));
+INSERT INTO Abonne values (6, 'Jacques', 'Lepere', TO_DATE('1992/01/16 18:34:11', 'yyyy/mm/dd hh24:mi:ss'), 'Homme', 'Grenoble', '5 place Verdun', 38000, TO_DATE('2015/01/10 18:34:11', 'yyyy/mm/dd hh24:mi:ss'));
 
 INSERT INTO RemiseNonAbonne values (1, '0000001', 10, TO_DATE('2015/02/01 16:00:00', 'yyyy/mm/dd hh24:mi:ss'),1);
 
@@ -85,6 +87,7 @@ INSERT INTO RemiseAbonne values (1,10, 2);
 INSERT INTO Location values (1, 1, TO_DATE('2015/01/16 14:34:11', 'yyyy/mm/dd hh24:mi:ss'),NULL, 'Vplus', NULL);
 INSERT INTO Location values (2, 3, TO_DATE('2015/01/12 12:20:35', 'yyyy/mm/dd hh24:mi:ss'), TO_DATE('2015/01/12 13:05:11', 'yyyy/mm/dd hh24:mi:ss'), 'Vnul','Vnul');
 INSERT INTO Location values (4, 4, TO_DATE('2015/01/10 14:34:00', 'yyyy/mm/dd hh24:mi:ss'),NULL, 'Vplus', 'Vmoins');
+INSERT INTO Location values (3, 4, TO_DATE('2014/12/10 14:34:11', 'yyyy/mm/dd hh24:mi:ss'),TO_DATE('2014/12/11 14:34:11', 'yyyy/mm/dd hh24:mi:ss'), 'Vplus', 'Vmoins');
 
 INSERT INTO ActionVehicule values (1, TO_DATE('2015/01/15 00:34:11', 'yyyy/mm/dd hh24:mi:ss'));
 INSERT INTO ActionVehicule values (2, TO_DATE('2015/01/15 08:34:11', 'yyyy/mm/dd hh24:mi:ss'));
@@ -100,6 +103,10 @@ INSERT INTO TacheRoutine values (1, 1, 1, 'En attente');
 INSERT INTO TacheRoutine values (2, 1, 1, 'En attente');
 
 INSERT INTO Amende values (1,3.2,1,1,TO_DATE('2015/01/16 14:34:11', 'yyyy/mm/dd hh24:mi:ss'));
+INSERT INTO Amende values (2,3.2,3,2,TO_DATE('2015/01/12 12:20:35', 'yyyy/mm/dd hh24:mi:ss'));
+INSERT INTO Amende values (3,3.2,3,2,TO_DATE('2015/01/12 12:20:35', 'yyyy/mm/dd hh24:mi:ss'));
+INSERT INTO Amende values (4,3.2,4,3,TO_DATE('2014/12/10 14:34:11', 'yyyy/mm/dd hh24:mi:ss'));
+
 
 INSERT INTO Reservation values (1,2,TO_DATE('2015/01/09 22:00:00', 'yyyy/mm/dd hh24:mi:ss'),'jour','Termine');
 
