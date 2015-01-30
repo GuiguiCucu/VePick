@@ -44,7 +44,7 @@ INSERT INTO TacheRoutine values (1, 1, 3, 'En attente');
 
 Valider la prochaine tache:
 UPDATE TacheRoutine 
-SET etat='Echec'
+SET etat='En attente'
 WHERE numVehicule=1 AND numTache=1 AND rang=1;
 
 Valider une tache qui n'est pas la prochaine:

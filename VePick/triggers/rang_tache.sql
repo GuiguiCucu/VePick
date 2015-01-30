@@ -19,7 +19,7 @@ END;
 
 SELECT * FROM TacheRoutine;
 -- on essaie d'entrer un rang  valide
-INSERT INTO TacheRoutine values (1, 1, 4, 'En attente');
+INSERT INTO TacheRoutine values (1, 1, 3, 'En attente');
 
 -- rang trop grand
 INSERT INTO TacheRoutine values (1, 1, 6, 'En attente');
